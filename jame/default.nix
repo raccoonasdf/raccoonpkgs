@@ -1,4 +1,4 @@
-{ pkgs, lib }:
+{ pkgs, lib, fetchFromGitHub }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "jame";
   version = "0.1.0";
