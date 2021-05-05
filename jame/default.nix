@@ -6,9 +6,9 @@ pkgs.rustPlatform.buildRustPackage {
     owner = "raccoonasdf";
     repo = "jame";
     rev = "c2519457295c293d30a4ed72c48307085bd7f9f3";
-    sha256 = "1jd5ibxshy4aw3d9yq90ydkkfb5bcs6fsy7pd043p29s3p5a9kjv";
+    hash = "sha256-W86kyh06iTsIaPd47Yxmqyw3Z/MgYZ/a4Ip4qPuKpck=";
   };
-  cargoSha256 = "1w02rzghb42kr11bawhay42dfm7941vd0r55k49fqmbw9xp2qgzj";
+  cargoHash = "sha256-z/d90JAyyX8V99a1XKnGGhcJ4OMby7StlyLZ64yupVI=";
   meta = with lib; {
     description = "Our friend jame";
     homepage = "https://github.com/raccoonasdf/jame";
