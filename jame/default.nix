@@ -2,7 +2,7 @@
 pkgs.rustPlatform.buildRustPackage {
   pname = "jame";
   version = "0.1.0";
-  src = fetchFromGithub {
+  src = fetchFromGitHub {
     owner = "raccoonasdf";
     repo = "jame";
     rev = "c2519457295c293d30a4ed72c48307085bd7f9f3";
