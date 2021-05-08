@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+maim "$@"
+
+f=${@: -1}
+if [ $# -ne "0" ] && [ -f "$f" ]; then
+    dragon "$f"
+fi
