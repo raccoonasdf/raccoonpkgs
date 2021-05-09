@@ -13,5 +13,6 @@ pkgs.rustPlatform.buildRustPackage {
     description = "Our friend jame";
     homepage = "https://github.com/raccoonasdf/jame";
     license = licenses.unfree;
+    maintainers = with import ../maintainer-list.nix; [ raccoon ];
   };
 }
