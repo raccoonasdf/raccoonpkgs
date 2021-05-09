@@ -1,4 +1,4 @@
-{ python3, dmenu }:
+{ lib, python3, dmenu }:
 
 python3.pkgs.buildPythonPackage {
   pname = "racmenu";
