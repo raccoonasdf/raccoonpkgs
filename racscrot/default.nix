@@ -1,4 +1,4 @@
-{ stdenv }:
+{ lib, stdenv }:
 
 stdenv.mkDerivation {
   pname = "racscrot";
@@ -11,6 +11,7 @@ stdenv.mkDerivation {
   installPhase = ''
     mkdir -p $out/bin
     cp -r . $out/bin
+    wrapProgram "$out/bin/racscrot" --prefix PATH : "${lib.makeBinPath [ maim dragon-drop ]}"
   '';
 
   meta = with lib; {
