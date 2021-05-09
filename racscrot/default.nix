@@ -1,4 +1,4 @@
-{ lib, stdenv, dragon-drop, maim }:
+{ lib, stdenv, makeWrapper, dragon-drop, maim }:
 
 stdenv.mkDerivation {
   pname = "racscrot";
@@ -7,6 +7,8 @@ stdenv.mkDerivation {
   src = ./src;
 
   dontBuild = true;
+
+  nativeBuildInputs = [ makeWrapper ];
 
   installPhase = ''
     mkdir -p $out/bin
