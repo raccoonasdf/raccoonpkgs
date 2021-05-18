@@ -14,6 +14,7 @@ stdenv.mkDerivation {
 
   installPhase = ''
     make install INSDIR=$out/share/blesh
+    sed -i "s%PATH=/bin:/usr/bin %%" $out/share/blesh/ble.sh
   '';
 
   meta = with lib; {
