@@ -1,0 +1,33 @@
+diff --git a/GNUmakefile b/GNUmakefile
+index af09a9b..710b0fe 100644
+--- a/GNUmakefile
++++ b/GNUmakefile
+@@ -83,9 +83,7 @@ $(OUTDIR)/lib/core-syntax.sh: lib/core-syntax.sh lib/core-syntax-ctx.def | $(OUT
+ 
+ .PHONY: update-contrib
+ update-contrib:
+-	git submodule update --init --recursive
+ contrib/.git:
+-	git submodule update --init --recursive
+ outdirs += $(OUTDIR)/contrib
+ contrib-files = $(wildcard contrib/*.bash)
+ outfiles += $(contrib-files:contrib/%=$(OUTDIR)/contrib/%)
+diff --git a/ble.pp b/ble.pp
+index b90f106..e50e748 100644
+--- a/ble.pp
++++ b/ble.pp
+@@ -394,12 +394,12 @@ function ble/util/readlink {
+   case "$OSTYPE" in
+   (cygwin|msys|linux-gnu)
+     # 少なくとも cygwin, GNU/Linux では readlink -f が使える
+-    ble/util/assign ret 'PATH=/bin:/usr/bin readlink -f "$path"' ;;
++    ble/util/assign ret 'readlink -f "$path"' ;;
+   (darwin*|*)
+     # Mac OSX には readlink -f がない。
+     local PWD=$PWD OLDPWD=$OLDPWD
+     while [[ -h $path ]]; do
+-      local link; ble/util/assign link 'PATH=/bin:/usr/bin readlink "$path" 2>/dev/null || true'
++      local link; ble/util/assign link 'readlink "$path" 2>/dev/null || true'
+       [[ $link ]] || break
+ 
+       if [[ $link = /* || $path != */* ]]; then

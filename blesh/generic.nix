@@ -1,8 +1,8 @@
-{ version, rev, hash }:
-{ lib, stdenv, fetchFromGitHub, git }:
+{ version, rev, hash, patches }:
+{ lib, stdenv, fetchFromGitHub }:
 stdenv.mkDerivation {
   pname = "blesh";
-  inherit version;
+  inherit version patches;
 
   src = fetchFromGitHub {
     owner = "akinomyoga";
@@ -10,11 +10,8 @@ stdenv.mkDerivation {
     inherit rev hash;
   };
 
-  nativeBuildInputs = [ git ];
-
   installPhase = ''
     make install INSDIR=$out/share/blesh
-    sed -i "s%PATH=/bin:/usr/bin %%" $out/share/blesh/ble.sh
   '';
 
   meta = with lib; {

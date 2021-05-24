@@ -1,0 +1,19 @@
+diff --git a/ble.pp b/ble.pp
+index f4e5273..7892365 100644
+--- a/ble.pp
++++ b/ble.pp
+@@ -306,12 +306,12 @@ function ble/util/readlink {
+   case "$OSTYPE" in
+   (cygwin|msys|linux-gnu)
+     # 少なくとも cygwin, GNU/Linux では readlink -f が使える
+-    ble/util/assign ret 'PATH=/bin:/usr/bin readlink -f "$path"' ;;
++    ble/util/assign ret 'readlink -f "$path"' ;;
+   (darwin*|*)
+     # Mac OSX には readlink -f がない。
+     local PWD=$PWD OLDPWD=$OLDPWD
+     while [[ -h $path ]]; do
+-      local link; ble/util/assign link 'PATH=/bin:/usr/bin readlink "$path" 2>/dev/null || true'
++      local link; ble/util/assign link 'readlink "$path" 2>/dev/null || true'
+       [[ $link ]] || break
+ 
+       if [[ $link = /* || $path != */* ]]; then
