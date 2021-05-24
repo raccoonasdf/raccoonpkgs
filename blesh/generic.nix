@@ -1,13 +1,13 @@
+{ version, rev, hash }:
 { lib, stdenv, fetchFromGitHub, git }:
 stdenv.mkDerivation {
   pname = "blesh";
-  version = "0.3.3";
+  inherit version;
 
   src = fetchFromGitHub {
     owner = "akinomyoga";
     repo = "ble.sh";
-    rev = "7fa584c42d25f379319fc82c6020b7bcf63f902b";
-    hash = "sha256-Gfo2S1t5Kdy+8TEDS4M5yhyRShvzQIljdE0MQK1CL+4=";
+    inherit rev hash;
   };
 
   nativeBuildInputs = [ git ];
