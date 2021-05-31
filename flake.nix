@@ -10,6 +10,12 @@
     forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
   in {
     overlay = import ./.;
-    packages = forAllSystems (system: ((import ./.) {} nixpkgs.legacyPackages.${system}).rac);
+    packages = forAllSystems (system:
+    let
+      prev = import nixpkgs {
+        inherit system;
+        config.allowUnfree = true;
+      };
+    in ((import ./.) {} prev).rac);
   };
 }
