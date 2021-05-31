@@ -1,9 +1,6 @@
 {
   description = "raccoon's nix packages";
-  inputs = {
-    nixpkgs.url = github:nixos/nixpkgs/release-21.05;
-  };
-
+  
   outputs = { self, nixpkgs }:
   let
     systems = [ "x86_64-linux" ];
