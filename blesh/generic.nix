@@ -15,7 +15,8 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib; {
-    description = "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
+    description =
+      "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
     license = licenses.bsd3;
     maintainers = with import ../maintainer-list.nix; [ raccoon ];
   };

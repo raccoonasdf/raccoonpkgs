@@ -11,5 +11,5 @@ python3.pkgs.buildPythonPackage {
     description = "A shitty dmenu wrapper for .desktop files";
     license = licenses.unfree;
     maintainers = with import ../maintainer-list.nix; [ raccoon ];
-  };  
+  };
 }

@@ -1,5 +1,5 @@
 { lib, vscode-utils }:
-let 
+let
   inherit (vscode-utils) buildVscodeMarketplaceExtension;
 
   maintainers = [ (import ../maintainer-list.nix).raccoon ];

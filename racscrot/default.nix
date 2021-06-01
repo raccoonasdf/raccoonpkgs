@@ -13,12 +13,15 @@ stdenv.mkDerivation {
   installPhase = ''
     mkdir -p $out/bin
     cp -r . $out/bin
-    wrapProgram "$out/bin/racscrot" --prefix PATH : "${lib.makeBinPath [ dragon-drop maim ]}"
+    wrapProgram "$out/bin/racscrot" --prefix PATH : "${
+      lib.makeBinPath [ dragon-drop maim ]
+    }"
   '';
 
   meta = with lib; {
-    description = "Little script that screenshots and then opens dragon for a drag source.";
+    description =
+      "Little script that screenshots and then opens dragon for a drag source.";
     license = licenses.unfree;
     maintainers = with import ../maintainer-list.nix; [ raccoon ];
-  };    
+  };
 }
