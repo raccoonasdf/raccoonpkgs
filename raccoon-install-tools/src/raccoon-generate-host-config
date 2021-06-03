@@ -1,0 +1,54 @@
+#!/bin/sh
+set -eu
+
+OUTFILE=""
+ROOT_DIR="/"
+
+function usage() {
+    printf "\e[1m%s\e[0m\n" "USAGE"
+    printf "%-8s\n\n" "generate-host-config [OPTION]... OUTFILE"
+    printf "%-8s %-24s\n" \
+        "OUTFILE" "location to output config file" \
+        "-h, --help" "display this help and exit" \
+        "-r, --root DIRECTORY" "treat given directory as root of filesystem"
+}
+
+while [ $# -gt 0 ]; do
+    case "$1" in
+    -h|--help)
+        usage
+        exit
+        ;;
+    -r|--root)
+        ROOT_DIR="$2"
+        shift
+        shift
+        ;;
+    *)
+        if [ -n "$OUTFILE" ]; then
+            echo "more than one output file specified"
+            exit 1
+        fi
+        OUTFILE="$1"
+        shift
+        ;;
+    esac
+done
+
+if [ -z "$OUTFILE" ]; then
+    echo "no output file specified"
+    usage
+    exit 1
+fi
+
+# merge hardware-configuration.nix and configuration.nix into $OUTFILE
+nixos-generate-config --force --root "$ROOT_DIR" --dir /tmp || exit 1
+sed -n '/^}$/q;p' "$ROOT_DIR/tmp/hardware-configuration.nix" >"$OUTFILE"
+sed '1,/];$/d' "$ROOT_DIR/tmp/configuration.nix" >>"$OUTFILE"
+rm "$ROOT_DIR/tmp/hardware-configuration.nix" "$ROOT_DIR/tmp/configuration.nix"
+
+# remove comments and make formatting pretty
+sed -i '/^\s*#.*$/d; s/#.*$//;' "$OUTFILE"
+nixfmt "$OUTFILE"
+
+echo "generated $OUTFILE"

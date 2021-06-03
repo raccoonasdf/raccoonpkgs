@@ -10,5 +10,7 @@ final: prev: {
     vscode-extensions = prev.callPackage ./vscode-extensions { };
     racmenu = prev.callPackage ./racmenu { };
     racscrot = prev.callPackage ./racscrot { };
+
+    raccoon-install-tools = prev.callPackage ./raccoon-install-tools { };
   };
 }
