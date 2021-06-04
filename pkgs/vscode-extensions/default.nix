@@ -1,8 +1,8 @@
-{ lib, vscode-utils }:
+{ lib, rac-lib, vscode-utils }:
 let
   inherit (vscode-utils) buildVscodeMarketplaceExtension;
 
-  maintainers = [ (import ../maintainer-list.nix).raccoon ];
+  maintainers = [ rac-lib.maintainers.raccoon ];
 in {
   christian-kohler.path-intellisense = buildVscodeMarketplaceExtension {
     mktplcRef = {

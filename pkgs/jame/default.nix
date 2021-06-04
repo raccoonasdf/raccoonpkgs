@@ -1,4 +1,4 @@
-{ pkgs, lib, fetchFromGitHub }:
+{ pkgs, lib, rac-lib, fetchFromGitHub, }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "jame";
   version = "0.1.0";
@@ -9,10 +9,10 @@ pkgs.rustPlatform.buildRustPackage {
     hash = "sha256-W86kyh06iTsIaPd47Yxmqyw3Z/MgYZ/a4Ip4qPuKpck=";
   };
   cargoHash = "sha256-z/d90JAyyX8V99a1XKnGGhcJ4OMby7StlyLZ64yupVI=";
-  meta = with lib; {
+  meta = with lib; with rac-lib; {
     description = "Our friend jame";
     homepage = "https://github.com/raccoonasdf/jame";
     license = licenses.unfree;
-    maintainers = with import ../maintainer-list.nix; [ raccoon ];
+    maintainers = [ maintainers.raccoon ];
   };
 }

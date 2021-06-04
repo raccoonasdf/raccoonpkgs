@@ -1,4 +1,4 @@
-{ lib, stdenv, makeWrapper, nixos-install-tools, nixfmt }:
+{ lib, rac-lib, stdenv, makeWrapper, nixos-install-tools, nixfmt }:
 stdenv.mkDerivation {
   pname = "raccoon-install-tools";
   version = "1";
@@ -20,8 +20,8 @@ stdenv.mkDerivation {
     }"
   '';
 
-  meta = with lib; {
+  meta = with lib; with rac-lib; {
     description = "Some scripts for installing raccoon's nixos configs.";
-    maintainers = with import ../maintainer-list.nix; [ raccoon ];
+    maintainers = [ maintainers.raccoon ];
   };
 }

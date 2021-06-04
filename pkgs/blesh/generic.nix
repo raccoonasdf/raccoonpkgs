@@ -1,5 +1,5 @@
 { version, rev, hash, patches }:
-{ lib, stdenv, fetchFromGitHub }:
+{ lib, rac-lib, stdenv, fetchFromGitHub }:
 stdenv.mkDerivation {
   pname = "blesh";
   inherit version patches;
@@ -14,10 +14,10 @@ stdenv.mkDerivation {
     make install INSDIR=$out/share/blesh
   '';
 
-  meta = with lib; {
+  meta = with lib; with rac-lib; {
     description =
       "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
     license = licenses.bsd3;
-    maintainers = with import ../maintainer-list.nix; [ raccoon ];
+    maintainers = [ maintainers.raccoon ];
   };
 }
