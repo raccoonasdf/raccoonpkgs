@@ -21,18 +21,10 @@
       url = "github:nix-community/home-manager/release-21.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    nix-home = {
-      url = "github:raccoonasdf/nix-home";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.unstable.follows = "unstable";
-      inputs.nur.follows = "nur";
-      inputs.home-manager.follows = "home-manager";
-    };
   };
 
   outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
-    , home-manager, nix-home }:
+    , home-manager }: 
     utils.lib.systemFlake {
       inherit self inputs;
 
@@ -73,7 +65,8 @@
         self.overlay
         nur.overlay
         (final: prev: {
-          home-manager = prev.callPackage "${home-manager}/home-manager" { path = "./."; };
+          home-manager =
+            prev.callPackage "${home-manager}/home-manager" { path = "./."; };
         }) # is this the right way to do this?
       ];
 
@@ -101,6 +94,46 @@
         ];
       };
 
+      homeConfigurations = let
+        mkHomes = with nixpkgs;
+          lib.mapAttrs (profile:
+            { modules, system ? "x86_64-linux" }:
+            home-manager.lib.homeManagerConfiguration rec {
+              inherit system;
+
+              username = builtins.elemAt (lib.splitString "@" profile) 0;
+
+              homeDirectory = "/home/${username}";
+
+              configuration = { ... }: {
+                nixpkgs = {
+                  config.allowUnfree = true;
+
+                  overlays = [
+                    nur.overlay
+                    self.overlay
+                    (final: prev: {
+                      inherit (unstable) # ...
+                      ;
+                    })
+                  ];
+                };
+
+                imports = modules ++ [ ./home/modules ./home/profiles ];
+              };
+            });
+      in let inherit (nixpkgs) lib;
+      in with lib;
+      let
+        hostFiles = filterAttrs (n: _: hasSuffix ".host.nix" n)
+          (builtins.readDir ./home/profiles);
+
+        hosts = mapAttrs' (n: _:
+          nameValuePair ("raccoon@" + (removeSuffix ".host.nix" n)) ({
+            modules = [ (./home/profiles + ("/" + n)) ];
+          })) hostFiles;
+      in mkHomes (hosts // { raccoon = { }; });
+
       deploy.nodes = let
         systemNode = { host, hostname, sshUser ? "raccoon", profiles ? { }
           , home ? false }: {
@@ -113,7 +146,7 @@
               } // (if home then {
                 home = {
                   path = deploy-rs.lib.x86_64-linux.activate.home-manager
-                    nix-home.homeConfigurations."${sshUser}@${host}";
+                    self.homeConfigurations."${sshUser}@${host}";
                   user = sshUser;
                 };
               } else

@@ -114,36 +114,6 @@
         "type": "github"
       }
     },
-    "nix-home": {
-      "inputs": {
-        "home-manager": [
-          "home-manager"
-        ],
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "nur": [
-          "nur"
-        ],
-        "raccoonpkgs": "raccoonpkgs",
-        "unstable": [
-          "unstable"
-        ]
-      },
-      "locked": {
-        "lastModified": 1622574468,
-        "narHash": "sha256-GgNKMVwJX7/AYZvovNSwBILhV1Fvmth4sTBCEX4Crc4=",
-        "owner": "raccoonasdf",
-        "repo": "nix-home",
-        "rev": "95cb7da21ecc552e3d293ef7bf0e84c5e7409e82",
-        "type": "github"
-      },
-      "original": {
-        "owner": "raccoonasdf",
-        "repo": "nix-home",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1610942247,
@@ -191,32 +161,11 @@
         "type": "github"
       }
     },
-    "raccoonpkgs": {
-      "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ]
-      },
-      "locked": {
-        "lastModified": 1622501411,
-        "narHash": "sha256-Sju7+o5PyGrxoPFTC9RAESg1d9soZVM6x8rtZfY1BTY=",
-        "owner": "raccoonasdf",
-        "repo": "raccoonpkgs",
-        "rev": "976b1ba4554426f170d346674b76d21805e65f53",
-        "type": "github"
-      },
-      "original": {
-        "owner": "raccoonasdf",
-        "repo": "raccoonpkgs",
-        "type": "github"
-      }
-    },
     "root": {
       "inputs": {
         "agenix": "agenix",
         "deploy-rs": "deploy-rs",
         "home-manager": "home-manager",
-        "nix-home": "nix-home",
         "nixpkgs": "nixpkgs_2",
         "nur": "nur",
         "unstable": "unstable",

@@ -1,0 +1,37 @@
+set -l last_pipestatus $pipestatus
+set -lx __fish_last_status $status
+set -l normal (set_color normal)
+
+set -l color_cwd $fish_color_cwd
+set -l suffix '$'
+if functions -q fish_is_root_user; and fish_is_root_user
+    if set -q fish_color_cwd_root
+        set color_cwd $fish_color_cwd_root
+    end
+    set -l suffix "#"
+end
+
+set -l color_host $fish_color_host
+if set -q SSH_TTY
+    set color_host $fish_color_host_remote
+end
+
+set -l bold_flag --bold
+set -q __fish_prompt_status_generation; \
+    or set -g __fish_prompt_status_generation $status_generation
+if test $__fish_prompt_status_generation = $status_generation
+    set bold_flag
+end
+set __fish_prompt_status_generation $status_generation
+set -l prompt_status (__fish_print_pipestatus \
+    "[exited: " "]" "|" \
+    (set_color $fish_color_status) (set_color $bold_flag $fish_color_status) \
+    $last_pipestatus)
+if test -n "$prompt_status"
+    echo "$prompt_status"
+end
+
+echo -n -s (set_color $fish_color_user) "$USER" \
+    $normal @ (set_color $color_host) (prompt_hostname) \
+    $normal " " (set_color $color_cwd) (prompt_pwd) \
+    " " $suffix " "
