@@ -1,4 +1,4 @@
-{ lib, stdenv, makeWrapper, dragon-drop, maim }:
+{ lib, rac-lib, stdenv, makeWrapper, dragon-drop, maim }:
 
 stdenv.mkDerivation {
   pname = "racscrot";
