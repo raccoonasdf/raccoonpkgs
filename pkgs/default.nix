@@ -10,7 +10,8 @@ rac-lib: final: prev: {
     blesh = blesh_0_3;
 
     jame = callPackage ./jame { };
-    vscode-extensions = prev.recurseIntoAttrs (callPackage ./vscode-extensions { });
+    vscode-extensions =
+      prev.recurseIntoAttrs (callPackage ./vscode-extensions { });
     racmenu = callPackage ./racmenu { };
     racscrot = callPackage ./racscrot { };
 

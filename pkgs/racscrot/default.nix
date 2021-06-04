@@ -18,10 +18,11 @@ stdenv.mkDerivation {
     }"
   '';
 
-  meta = with lib; with rac-lib; {
-    description =
-      "Little script that screenshots and then opens dragon for a drag source.";
-    license = licenses.unfree;
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description =
+        "Little script that screenshots and then opens dragon for a drag source.";
+      license = licenses.unfree;
+      maintainers = [ maintainers.raccoon ];
+    };
 }

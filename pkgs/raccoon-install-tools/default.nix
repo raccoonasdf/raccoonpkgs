@@ -20,8 +20,9 @@ stdenv.mkDerivation {
     }"
   '';
 
-  meta = with lib; with rac-lib; {
-    description = "Some scripts for installing raccoon's nixos configs.";
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description = "Some scripts for installing raccoon's nixos configs.";
+      maintainers = [ maintainers.raccoon ];
+    };
 }

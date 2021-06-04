@@ -9,10 +9,11 @@ pkgs.rustPlatform.buildRustPackage {
     hash = "sha256-VqAvXgh48taDRfl7Lh7YVvbWRPxdlSdd8yyuHaASkhk=";
   };
   cargoHash = "sha256-T1bHSDcohBBozJgw2LJwLh0GXfWcS40KyAP0B4IVy44=";
-  meta = with lib; with rac-lib; {
-    description = "Modifies 16-color paletted image to match a base16 scheme";
-    homepage = "https://github.com/raccoonasdf/base16ify";
-    license = licenses.unfree;
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description = "Modifies 16-color paletted image to match a base16 scheme";
+      homepage = "https://github.com/raccoonasdf/base16ify";
+      license = licenses.unfree;
+      maintainers = [ maintainers.raccoon ];
+    };
 }
