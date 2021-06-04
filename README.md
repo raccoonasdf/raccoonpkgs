@@ -1,11 +1,6 @@
-# raccoon's radicool flakey system
+# raccoon's radicool flakey nix stuff
 
-here's some configs that i use for nixos.
-
-check out these adjacent repos for further context:
-
-- [raccoonasdf/nix-home](https://github.com/raccoonasdf/nix-home)
-- [raccoonasdf/raccoonpkgs](https://github.com/raccoonasdf/raccoonpkgs)
+here's some configs that i use with `nix(os)?`.
 
 i might've used or been inspired by bits from these places:
 

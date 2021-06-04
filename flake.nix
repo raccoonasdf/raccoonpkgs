@@ -1,5 +1,5 @@
 {
-  description = "raccoon's nix packages";
+  description = "raccoon's radicool flakey nix stuff";
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/nixos-21.05";
