@@ -24,7 +24,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
-    , home-manager }: 
+    , home-manager }:
     utils.lib.systemFlake {
       inherit self inputs;
 

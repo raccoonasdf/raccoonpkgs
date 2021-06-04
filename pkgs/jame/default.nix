@@ -9,10 +9,11 @@ pkgs.rustPlatform.buildRustPackage {
     hash = "sha256-W86kyh06iTsIaPd47Yxmqyw3Z/MgYZ/a4Ip4qPuKpck=";
   };
   cargoHash = "sha256-z/d90JAyyX8V99a1XKnGGhcJ4OMby7StlyLZ64yupVI=";
-  meta = with lib; with rac-lib; {
-    description = "Our friend jame";
-    homepage = "https://github.com/raccoonasdf/jame";
-    license = licenses.unfree;
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description = "Our friend jame";
+      homepage = "https://github.com/raccoonasdf/jame";
+      license = licenses.unfree;
+      maintainers = [ maintainers.raccoon ];
+    };
 }

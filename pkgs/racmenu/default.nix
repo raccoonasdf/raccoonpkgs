@@ -7,9 +7,10 @@ python3.pkgs.buildPythonPackage {
   buildInputs = with python3.pkgs; [ setuptools_scm ];
   propagatedBuildInputs = with python3.pkgs; [ xdg dmenu ];
 
-  meta = with lib; with rac-lib; {
-    description = "A shitty dmenu wrapper for .desktop files";
-    license = licenses.unfree;
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description = "A shitty dmenu wrapper for .desktop files";
+      license = licenses.unfree;
+      maintainers = [ maintainers.raccoon ];
+    };
 }

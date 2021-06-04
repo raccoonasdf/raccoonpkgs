@@ -1,3 +1,1 @@
-{
-  maintainers = import ./maintainer-list.nix;
-}
+{ maintainers = import ./maintainer-list.nix; }

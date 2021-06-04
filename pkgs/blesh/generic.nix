@@ -14,10 +14,11 @@ stdenv.mkDerivation {
     make install INSDIR=$out/share/blesh
   '';
 
-  meta = with lib; with rac-lib; {
-    description =
-      "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
-    license = licenses.bsd3;
-    maintainers = [ maintainers.raccoon ];
-  };
+  meta = with lib;
+    with rac-lib; {
+      description =
+        "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
+      license = licenses.bsd3;
+      maintainers = [ maintainers.raccoon ];
+    };
 }
