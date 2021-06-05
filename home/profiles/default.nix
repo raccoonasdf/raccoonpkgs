@@ -1,7 +1,7 @@
 { lib, pkgs, config, ... }: {
   imports = [ ./fish ./git ./i3 ./kakoune ./ranger ./ssh ];
 
-  home.packages = with pkgs; [ atool fd manix ripgrep ];
+  home.packages = with pkgs; [ atool fd manix nixfmt ripgrep ];
 
   programs.bat = { enable = true; };
 
