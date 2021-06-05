@@ -3,7 +3,7 @@
     enable = true;
 
     bindings.browser.gb = let places = config.raccoon.places;
-    in lib.mkIf (builtins.hasAttr "box" places) "cd ${places.box}";
+    in lib.mkIf (places.box != null) "cd ${places.box}";
 
     settings = {
       column_ratios = "1,4,5";
