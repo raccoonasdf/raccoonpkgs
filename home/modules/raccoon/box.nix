@@ -9,6 +9,11 @@ in {
       type = types.str;
       default = "/rac";
     };
+
+    enableUserDirs = mkOption {
+      type = types.bool;
+      default = false;
+    };
   };
 
   config = let box = cfg.mount;
@@ -19,5 +24,14 @@ in {
     };
 
     home.sessionVariables.GNUPGHOME = "${box}/keys/gpg";
+
+    xdg.userDirs = mkIf cfg.enableUserDirs {
+      enable = true;
+      documents = "${box}/dump/xdg-documents";
+      download = "${box}/dump";
+      music = "${box}/audio";
+      pictures = "${box}/visual";
+      videos = "${box}/visual";
+    };
   };
 }
