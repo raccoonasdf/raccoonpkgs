@@ -1,4 +1,4 @@
-{ lib, pkgs, ... }:
+{ lib, pkgs, raccoonpkgs, ... }:
 with lib; {
   base16ify = scheme: src:
     pkgs.stdenv.mkDerivation rec {
@@ -6,7 +6,7 @@ with lib; {
 
       inherit src;
 
-      nativeBuildInputs = [ pkgs.rac.base16ify ];
+      nativeBuildInputs = [ raccoonpkgs.base16ify ];
 
       dontUnpack = true;
       dontBuild = true;

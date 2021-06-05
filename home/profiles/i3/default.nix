@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, raccoonpkgs, ... }:
 let styles = config.raccoon.styles;
 in let
   colors = styles.colors.hashed;
@@ -85,7 +85,7 @@ in {
 
           screenshotsLocation =
             "${places.screenshots}/$(date +Screenshot_%F_%H-%M-%S).png";
-        in with pkgs.rac; {
+        in with raccoonpkgs; {
           "${alt}+space" = "exec i3-sensible-terminal";
           "${mod}+d" =
             "exec ${racmenu}/bin/racmenu -b -i -l 15 -fn '${font}-9' -nb '${dark}' -nf '${light}' -sb '${light}' -sf '${dark}'";

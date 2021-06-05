@@ -1,4 +1,4 @@
-{ lib, pkgs, config, ... }:
+{ lib, raccoonpkgs, config, ... }:
 with lib;
 let
   cfg = config.programs.blesh;
@@ -19,7 +19,7 @@ in {
 
   config = mkIf cfg.enable {
     programs.bash.initExtra = ''
-      source ${pkgs.rac.blesh}/share/blesh/ble.sh
+      source ${raccoonpkgs.blesh}/share/blesh/ble.sh
     '';
     xdg.configFile."blesh/init.sh".text = renderFaces cfg.faces;
   };
