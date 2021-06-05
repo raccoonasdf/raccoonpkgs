@@ -94,6 +94,7 @@
       in hosts;
 
       hostDefaults = {
+        system = "x86_64-linux";
         modules = [
           utils.nixosModules.saneFlakeDefaults
           agenix.nixosModules.age
