@@ -15,3 +15,4 @@ and i am or will be making use of these projects:
 - [nix-community/home-manager](https://github.com/nix-community/home-manager)
 - [nix-community/NUR](https://github.com/nix-community/NUR)
 - [ryantm/agenix](https://github.com/ryantm/agenix)
+- [serokell/deploy-rs](https://github.com/serokell/deploy-rs)
