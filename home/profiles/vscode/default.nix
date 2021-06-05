@@ -1,8 +1,8 @@
-{ pkgs, config, ... }: {
+{ pkgs, raccoonpkgs, config, ... }: {
   programs.vscode = {
     enable = true;
     extensions = with pkgs.vscode-extensions;
-      with pkgs.rac.vscode-extensions; [
+      with raccoonpkgs.vscode-extensions; [
         # general
         gregoire.dance
         editorconfig.editorconfig

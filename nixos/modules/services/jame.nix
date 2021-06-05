@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, raccoonpkgs, lib, ... }:
 with lib;
 let cfg = config.services.jame;
 in {
@@ -21,7 +21,7 @@ in {
       serviceConfig = {
         User = "jame";
         EnvironmentFile = cfg.environmentFile;
-        ExecStart = "${pkgs.rac.jame}/bin/jame";
+        ExecStart = "${raccoonpkgs.jame}/bin/jame";
         Restart = "always";
       };
     };

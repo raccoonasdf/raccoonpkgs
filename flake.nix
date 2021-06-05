@@ -103,6 +103,7 @@
           (import ./nixos/modules)
           (import ./nixos/profiles)
         ];
+        specialArgs = { raccoonlib = self.lib; raccoonpkgs = self.legacyPackages.${defaultSystem}; };
       };
 
       ##############################
@@ -119,6 +120,8 @@
               username = builtins.elemAt (lib.splitString "@" profile) 0;
 
               homeDirectory = "/home/${username}";
+
+              extraSpecialArgs = { raccoonlib = self.lib; raccoonpkgs = self.legacyPackages.${system}; };
 
               configuration = { ... }: {
                 nixpkgs = {
