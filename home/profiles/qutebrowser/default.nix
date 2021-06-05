@@ -175,4 +175,7 @@
       };
     };
   };
+
+  xdg.dataFile."qutebrowser/greasemonkey/discordstyle.user.js".text =
+    builtins.readFile ./discordstyle.user.js;
 }
