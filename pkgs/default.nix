@@ -1,7 +1,7 @@
-rac-lib: final: prev: {
+raccoonlib: final: prev: {
   rac = let
     # this is silly. how to not?
-    callPackage = prev.lib.callPackageWith (prev // { inherit rac-lib; });
+    callPackage = prev.lib.callPackageWith (prev // { inherit raccoonlib; });
   in rec {
     base16ify = callPackage ./base16ify { };
 

@@ -1,4 +1,4 @@
-{ pkgs, lib, rac-lib, fetchFromGitHub }:
+{ pkgs, lib, raccoonlib, fetchFromGitHub }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "base16ify";
   version = "0.1.0";
@@ -10,7 +10,7 @@ pkgs.rustPlatform.buildRustPackage {
   };
   cargoHash = "sha256-T1bHSDcohBBozJgw2LJwLh0GXfWcS40KyAP0B4IVy44=";
   meta = with lib;
-    with rac-lib; {
+    with raccoonlib; {
       description = "Modifies 16-color paletted image to match a base16 scheme";
       homepage = "https://github.com/raccoonasdf/base16ify";
       license = licenses.unfree;
