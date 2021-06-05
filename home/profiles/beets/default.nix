@@ -1,5 +1,5 @@
 { config, ... }: {
-  beets = {
+  programs.beets = {
     enable = true;
     settings = let dir = "${config.raccoon.places.box}/published-media/music";
     in {
