@@ -77,6 +77,5 @@ in {
       wallpaper =
         toString (cfg.lib.base16ify cfg.styles.colors ./wallpaper.png);
     };
-    xdg.dataFile."raccoon/wallpaper".source = cfg.places.wallpaper;
   };
 }
