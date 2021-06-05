@@ -1,4 +1,4 @@
-{ lib, rac-lib, python3, dmenu }:
+{ lib, raccoonlib, python3, dmenu }:
 
 python3.pkgs.buildPythonPackage {
   pname = "racmenu";
@@ -8,7 +8,7 @@ python3.pkgs.buildPythonPackage {
   propagatedBuildInputs = with python3.pkgs; [ xdg dmenu ];
 
   meta = with lib;
-    with rac-lib; {
+    with raccoonlib; {
       description = "A shitty dmenu wrapper for .desktop files";
       license = licenses.unfree;
       maintainers = [ maintainers.raccoon ];

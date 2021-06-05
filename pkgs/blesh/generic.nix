@@ -1,5 +1,5 @@
 { version, rev, hash, patches }:
-{ lib, rac-lib, stdenv, fetchFromGitHub }:
+{ lib, raccoonlib, stdenv, fetchFromGitHub }:
 stdenv.mkDerivation {
   pname = "blesh";
   inherit version patches;
@@ -15,7 +15,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib;
-    with rac-lib; {
+    with raccoonlib; {
       description =
         "A command line editor written in pure Bash scripts which replaces the default GNU Readline.";
       license = licenses.bsd3;

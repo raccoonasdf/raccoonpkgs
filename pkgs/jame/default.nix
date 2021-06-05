@@ -1,4 +1,4 @@
-{ pkgs, lib, rac-lib, fetchFromGitHub, }:
+{ pkgs, lib, raccoonlib, fetchFromGitHub, }:
 pkgs.rustPlatform.buildRustPackage {
   pname = "jame";
   version = "0.1.0";
@@ -10,7 +10,7 @@ pkgs.rustPlatform.buildRustPackage {
   };
   cargoHash = "sha256-z/d90JAyyX8V99a1XKnGGhcJ4OMby7StlyLZ64yupVI=";
   meta = with lib;
-    with rac-lib; {
+    with raccoonlib; {
       description = "Our friend jame";
       homepage = "https://github.com/raccoonasdf/jame";
       license = licenses.unfree;

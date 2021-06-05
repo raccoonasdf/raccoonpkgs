@@ -1,4 +1,4 @@
-{ lib, rac-lib, stdenv, makeWrapper, dragon-drop, maim }:
+{ lib, raccoonlib, stdenv, makeWrapper, dragon-drop, maim }:
 
 stdenv.mkDerivation {
   pname = "racscrot";
@@ -19,7 +19,7 @@ stdenv.mkDerivation {
   '';
 
   meta = with lib;
-    with rac-lib; {
+    with raccoonlib; {
       description =
         "Little script that screenshots and then opens dragon for a drag source.";
       license = licenses.unfree;
