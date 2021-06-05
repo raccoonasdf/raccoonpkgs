@@ -25,7 +25,8 @@
 
   outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
     , home-manager }:
-    utils.lib.systemFlake {
+    let defaultSystem = "x86_64-linux";
+    in utils.lib.systemFlake {
 
       #################
       # Extra Outputs #
@@ -94,7 +95,7 @@
       in hosts;
 
       hostDefaults = {
-        system = "x86_64-linux";
+        system = defaultSystem;
         modules = [
           utils.nixosModules.saneFlakeDefaults
           agenix.nixosModules.age
@@ -111,7 +112,7 @@
       homeConfigurations = let
         mkHomes = with nixpkgs;
           lib.mapAttrs (profile:
-            { modules, system ? "x86_64-linux" }:
+            { modules, system ? defaultSystem }:
             home-manager.lib.homeManagerConfiguration rec {
               inherit system;
 
@@ -153,17 +154,17 @@
       ###########################
 
       deploy.nodes = let
-        systemNode = { host, hostname, sshUser ? "raccoon", profiles ? { }
-          , home ? false }: {
+        systemNode = { host, hostname, system ? defaultSystem
+          , sshUser ? "raccoon", profiles ? { }, home ? false }: {
             inherit hostname sshUser;
             profiles = profiles // {
               system = {
-                path = deploy-rs.lib.x86_64-linux.activate.nixos
+                path = deploy-rs.lib.${system}.activate.nixos
                   self.nixosConfigurations.${host};
                 user = "root";
               } // (if home then {
                 home = {
-                  path = deploy-rs.lib.x86_64-linux.activate.home-manager
+                  path = deploy-rs.lib.${system}.activate.home-manager
                     self.homeConfigurations."${sshUser}@${host}";
                   user = sshUser;
                 };
