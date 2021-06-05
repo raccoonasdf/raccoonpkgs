@@ -36,12 +36,6 @@
 
       overlay = (import ./pkgs) self.lib;
 
-      #######################
-      # NixOS Configuration #
-      #######################
-
-      inherit self inputs;
-
       # regular old `packages` didn't like vscode-extensions for some reason
       legacyPackages = let
         systems = [ "x86_64-linux" ];
@@ -53,6 +47,12 @@
             config.allowUnfree = true;
           };
         in (self.overlay { } prev).rac);
+
+      #######################
+      # NixOS Configuration #
+      #######################
+
+      inherit self inputs;
 
       channels = {
         nixpkgs = {
