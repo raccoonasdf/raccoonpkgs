@@ -26,11 +26,20 @@
   outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
     , home-manager }:
     utils.lib.systemFlake {
-      inherit self inputs;
+
+      #################
+      # Extra Outputs #
+      #################
 
       lib = import ./lib;
 
       overlay = (import ./pkgs) self.lib;
+
+      #######################
+      # NixOS Configuration #
+      #######################
+
+      inherit self inputs;
 
       # regular old `packages` didn't like vscode-extensions for some reason
       legacyPackages = let
@@ -94,6 +103,10 @@
         ];
       };
 
+      ##############################
+      # Home Manager Configuration #
+      ##############################
+
       homeConfigurations = let
         mkHomes = with nixpkgs;
           lib.mapAttrs (profile:
@@ -133,6 +146,10 @@
             modules = [ (./home/profiles + ("/" + n)) ];
           })) hostFiles;
       in mkHomes (hosts // { raccoon = { }; });
+
+      ###########################
+      # deploy-rs Configuration #
+      ###########################
 
       deploy.nodes = let
         systemNode = { host, hostname, sshUser ? "raccoon", profiles ? { }
