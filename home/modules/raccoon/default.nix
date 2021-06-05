@@ -10,9 +10,21 @@ in {
       default = (import ../../lib) attrs;
     };
 
-    places = mkOption {
-      type = with types; attrsOf str;
-      default = { };
+    places = {
+      box = mkOption {
+        type = with types; nullOr str;
+        default = null;
+      };
+
+      screenshots = mkOption {
+        type = with types; nullOr str;
+        default = null;
+      };
+      
+      wallpaper = mkOption {
+        type = with types; nullOr str;
+        default = null;
+      };
     };
 
     graphical = mkOption {
