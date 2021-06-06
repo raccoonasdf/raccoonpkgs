@@ -27,6 +27,15 @@
     , home-manager }:
     with nixpkgs.lib;
     let
+      raccoonlib = (import ./lib) nixpkgs.lib;
+
+      inherit (raccoonlib) defaultSystem forAllSystems;
+
+      _specialArgs = forAllSystems (system: {
+        inherit raccoonlib;
+        raccoonpkgs = self.legacyPackages.${system};
+      });
+
       hostFilesIn = let suffix = ".host.nix";
       in path:
       filter (file: hasAttr file.host hosts) (map (file: {
@@ -37,7 +46,7 @@
 
       hosts = mapAttrs (_: v:
         {
-          system = "x86_64-linux";
+          system = defaultSystem;
           allowUnfree = true;
           sshUser = "raccoon";
         } // v) {
@@ -47,15 +56,12 @@
           iso = { };
         };
     in utils.lib.systemFlake {
-      lib = (import ./lib) nixpkgs.lib;
+      lib = raccoonlib;
 
       overlay = (import ./pkgs) self.lib;
 
       # regular old `packages` didn't like vscode-extensions for some reason
-      legacyPackages = let
-        systems = [ "x86_64-linux" ];
-        forAllSystems = f: nixpkgs.lib.genAttrs systems (system: f system);
-      in forAllSystems (system:
+      legacyPackages = forAllSystems (system:
         let
           prev = import nixpkgs {
             inherit system;
@@ -110,10 +116,7 @@
             file.path
           ];
 
-          specialArgs = {
-            raccoonlib = self.lib;
-            raccoonpkgs = self.legacyPackages.${system};
-          };
+          specialArgs = _specialArgs.${system};
         })) (hostFilesIn ./nixos/profiles));
 
       ##############################
@@ -129,10 +132,7 @@
 
           homeDirectory = "/home/${username}";
 
-          extraSpecialArgs = {
-            raccoonlib = self.lib;
-            raccoonpkgs = self.legacyPackages.${system};
-          };
+          extraSpecialArgs = _specialArgs.${system};
 
           extraModules = [ ./home/modules ./home/profiles file.path ];
 
