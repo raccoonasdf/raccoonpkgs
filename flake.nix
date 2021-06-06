@@ -87,8 +87,9 @@
       channelsConfig.allowUnfree = true;
 
       sharedOverlays = [
-        self.overlay
         nur.overlay
+        agenix.overlay
+        self.overlay
         (final: prev: {
           home-manager =
             prev.callPackage "${home-manager}/home-manager" { path = "./."; };
@@ -141,6 +142,7 @@
 
               overlays = [
                 nur.overlay
+                agenix.overlay
                 self.overlay
                 (final: prev: {
                   inherit (unstable) # ...
