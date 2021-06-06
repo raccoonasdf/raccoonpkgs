@@ -25,14 +25,29 @@
 
   outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
     , home-manager }:
-    let defaultSystem = "x86_64-linux";
+    with nixpkgs.lib;
+    let
+      hostFilesIn = let suffix = ".host.nix";
+      in path:
+      filter (file: hasAttr file.host hosts) (map (file: {
+        path = path + ("/" + file);
+        host = removeSuffix suffix file;
+      }) (filter (file: hasSuffix suffix file)
+        (attrNames (builtins.readDir path))));
+
+      hosts = mapAttrs (_: v:
+        {
+          system = "x86_64-linux";
+          allowUnfree = true;
+          sshUser = "raccoon";
+        } // v) {
+          darvaza = { };
+          oberon = { hostname = "oberon.raccoon.fun"; };
+          flock-nixos = { hostname = "192.168.122.78"; };
+          iso = { };
+        };
     in utils.lib.systemFlake {
-
-      #################
-      # Extra Outputs #
-      #################
-
-      lib = import ./lib;
+      lib = (import ./lib) nixpkgs.lib;
 
       overlay = (import ./pkgs) self.lib;
 
@@ -80,110 +95,98 @@
         }) # is this the right way to do this?
       ];
 
-      hosts = let inherit (nixpkgs) lib;
-      in with lib;
-      let
-        suffix = ".host.nix";
+      hosts = listToAttrs (map (file:
+        nameValuePair file.host (let host = hosts.${file.host};
+        in rec {
+          inherit (host) system;
 
-        hostFiles = filterAttrs (n: _: hasSuffix suffix n)
-          (builtins.readDir ./nixos/profiles);
+          modules = [
+            utils.nixosModules.saneFlakeDefaults
+            agenix.nixosModules.age
+            home-manager.nixosModules.home-manager
+            ./nixos/modules
+            ./nixos/profiles
+            file.path
+          ];
 
-        hosts = mapAttrs' (n: _:
-          nameValuePair (removeSuffix suffix n) ({
-            modules = [ (./nixos/profiles + ("/" + n)) ];
-          })) hostFiles;
-      in hosts;
-
-      hostDefaults = {
-        system = defaultSystem;
-        modules = [
-          utils.nixosModules.saneFlakeDefaults
-          agenix.nixosModules.age
-          home-manager.nixosModules.home-manager
-          (import ./nixos/modules)
-          (import ./nixos/profiles)
-        ];
-        specialArgs = { raccoonlib = self.lib; raccoonpkgs = self.legacyPackages.${defaultSystem}; };
-      };
+          specialArgs = {
+            raccoonlib = self.lib;
+            raccoonpkgs = self.legacyPackages.${system};
+          };
+        })) (hostFilesIn ./nixos/profiles));
 
       ##############################
       # Home Manager Configuration #
       ##############################
 
-      homeConfigurations = let
-        mkHomes = with nixpkgs;
-          lib.mapAttrs (profile:
-            { modules, system ? defaultSystem }:
-            home-manager.lib.homeManagerConfiguration rec {
-              inherit system;
+      homeConfigurations = listToAttrs (map (file:
+        nameValuePair ("raccoon@" + file.host) (let host = hosts.${file.host};
+        in home-manager.lib.homeManagerConfiguration rec {
+          inherit (host) system;
 
-              username = builtins.elemAt (lib.splitString "@" profile) 0;
+          username = "raccoon";
 
-              homeDirectory = "/home/${username}";
+          homeDirectory = "/home/${username}";
 
-              extraSpecialArgs = { raccoonlib = self.lib; raccoonpkgs = self.legacyPackages.${system}; };
+          extraSpecialArgs = {
+            raccoonlib = self.lib;
+            raccoonpkgs = self.legacyPackages.${system};
+          };
 
-              configuration = { ... }: {
-                nixpkgs = {
-                  config.allowUnfree = true;
+          extraModules = [ ./home/modules ./home/profiles file.path ];
 
-                  overlays = [
-                    nur.overlay
-                    self.overlay
-                    (final: prev: {
-                      inherit (unstable) # ...
-                      ;
-                    })
-                  ];
-                };
+          configuration = {
+            nixpkgs = {
+              config = { inherit (host) allowUnfree; };
 
-                imports = modules ++ [ ./home/modules ./home/profiles ];
-              };
-            });
-      in let inherit (nixpkgs) lib;
-      in with lib;
-      let
-        hostFiles = filterAttrs (n: _: hasSuffix ".host.nix" n)
-          (builtins.readDir ./home/profiles);
-
-        hosts = mapAttrs' (n: _:
-          nameValuePair ("raccoon@" + (removeSuffix ".host.nix" n)) ({
-            modules = [ (./home/profiles + ("/" + n)) ];
-          })) hostFiles;
-      in mkHomes (hosts // { raccoon = { }; });
+              overlays = [
+                nur.overlay
+                self.overlay
+                (final: prev: {
+                  inherit (unstable) # ...
+                  ;
+                })
+              ];
+            };
+          };
+        })) (hostFilesIn ./home/profiles));
 
       ###########################
       # deploy-rs Configuration #
       ###########################
 
-      deploy.nodes = let
-        systemNode = { host, hostname, system ? defaultSystem
-          , sshUser ? "raccoon", profiles ? { }, home ? false }: {
-            inherit hostname sshUser;
-            profiles = profiles // {
-              system = {
-                path = deploy-rs.lib.${system}.activate.nixos
-                  self.nixosConfigurations.${host};
-                user = "root";
-              } // (if home then {
-                home = {
-                  path = deploy-rs.lib.${system}.activate.home-manager
-                    self.homeConfigurations."${sshUser}@${host}";
-                  user = sshUser;
-                };
-              } else
-                { });
-            };
-          };
+      deploy.nodes = mapAttrs (host:
+        { system, hostname, sshUser, ... }:
+        let
+          homesOnHost = filter (home: host == home.host) (map (authority:
+            let splitAuthority = splitString "@" authority;
+            in {
+              inherit authority;
+              user = head splitAuthority;
+              host = if (length splitAuthority) > 1 then
+                (last splitAuthority)
+              else
+                null;
+            }) (attrNames self.homeConfigurations));
 
-        systemNodes = nixpkgs.lib.mapAttrs
-          (host: attrs: systemNode ({ inherit host; } // attrs));
-      in systemNodes {
-        oberon.hostname = "oberon.raccoon.fun";
-        flock-nixos = {
-          hostname = "192.168.122.78";
-          home = true;
-        };
-      };
+          systemProfiles = if (hasAttr host self.nixosConfigurations) then {
+            system = {
+              path = deploy-rs.lib.${system}.activate.nixos
+                self.nixosConfigurations.${host};
+              user = "root";
+            };
+          } else
+            { };
+
+          homeProfiles = listToAttrs (builtins.map ({ authority, user, ... }:
+            nameValuePair ("home-" + user) {
+              path = deploy-rs.lib.${system}.activate.home-manager
+                self.homeConfigurations.${authority};
+              inherit user;
+            }) homesOnHost);
+        in {
+          inherit hostname sshUser;
+          profiles = systemProfiles // homeProfiles;
+        }) (filterAttrs (_: v: v ? hostname) hosts);
     };
 }
