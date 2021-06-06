@@ -36,13 +36,13 @@
         raccoonpkgs = self.legacyPackages.${system};
       });
 
-      hostFilesIn = let suffix = ".host.nix";
-      in path:
-      filter (file: hasAttr file.host hosts) (map (file: {
-        path = path + ("/" + file);
-        host = removeSuffix suffix file;
-      }) (filter (file: hasSuffix suffix file)
-        (attrNames (builtins.readDir path))));
+      hostFilesIn = path:
+        let suffix = ".host.nix";
+        in filter (file: hasAttr file.host hosts) (map (file: {
+          path = path + ("/" + file);
+          host = removeSuffix suffix file;
+        }) (filter (file: hasSuffix suffix file)
+          (attrNames (builtins.readDir path))));
 
       hosts = mapAttrs (_: v:
         {
@@ -60,7 +60,7 @@
 
       overlay = (import ./pkgs) self.lib;
 
-      # regular old `packages` didn't like vscode-extensions for some reason
+      # regular old `packages` doesn't like sub-sets of packages
       legacyPackages = forAllSystems (system:
         let
           prev = import nixpkgs {
