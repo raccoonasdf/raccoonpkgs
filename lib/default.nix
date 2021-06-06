@@ -7,5 +7,10 @@ let
           inherit lib;
           raccoonlib = self;
         };
-    in { maintainers = import ./maintainer-list.nix; });
+    in {
+      system = callLibs ./system.nix;
+      maintainers = import ./maintainer-list.nix;
+
+      inherit (self.system) systems defaultSystem forAllSystems;
+    });
 in raccoonlib
