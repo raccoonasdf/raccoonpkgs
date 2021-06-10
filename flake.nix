@@ -123,18 +123,29 @@
       # Home Manager Configuration #
       ##############################
 
-      homeConfigurations = listToAttrs (map (file:
-        nameValuePair ("raccoon@" + file.host) (let host = hosts.${file.host};
-        in home-manager.lib.homeManagerConfiguration rec {
-          inherit (host) system;
+      homeConfigurations = let
+        userDirs = attrNames (filterAttrs (_: type: type == "directory")
+          (builtins.readDir ./home));
 
-          username = "raccoon";
+        userHostFiles = flatten (map (username:
+          map (file: { inherit username file; })
+          (hostFilesIn (./home + "/${username}/profiles"))) userDirs);
+      in listToAttrs (map ({ username, file }:
+        nameValuePair (username + "@" + file.host)
+        (let host = hosts.${file.host};
+        in home-manager.lib.homeManagerConfiguration {
+          inherit (host) system;
+          inherit username;
 
           homeDirectory = "/home/${username}";
 
-          extraSpecialArgs = _specialArgs.${system};
+          extraSpecialArgs = _specialArgs.${host.system};
 
-          extraModules = [ ./home/modules ./home/profiles file.path ];
+          extraModules = [
+            (./home + "/${username}/modules")
+            (./home + "/${username}/profiles")
+            file.path
+          ];
 
           configuration = {
             nixpkgs = {
@@ -151,7 +162,7 @@
               ];
             };
           };
-        })) (hostFilesIn ./home/profiles));
+        })) userHostFiles);
 
       ###########################
       # deploy-rs Configuration #
