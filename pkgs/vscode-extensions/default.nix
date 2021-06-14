@@ -42,8 +42,8 @@ in {
     mktplcRef = {
       name = "dance";
       publisher = "gregoire";
-      version = "0.4.1";
-      sha256 = "sha256-MyZFcx5oZ5yFzekPSkFbHs7HE40dSOfzOg984YA86U8=";
+      version = "0.5.1";
+      sha256 = "sha256-0ix9h0Z40nhCgoVax4Tix9jJkmsWkd//Fl/y9PR9qf4=";
     };
 
     meta = with lib; {

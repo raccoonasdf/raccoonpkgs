@@ -28,6 +28,13 @@
       ];
     userSettings = {
       "editor.fontFamily" = config.raccoon.styles.fonts.mono;
+      "dance.modes" = {
+        normal = {
+          lineNumbers = "on";
+          cursorStyle = "block";
+          selectionBehaviour = "character";
+        };
+      };
     } // (import ./theme.nix) config.raccoon.styles.colors.hashed;
   };
 }
