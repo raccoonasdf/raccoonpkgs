@@ -26,6 +26,8 @@
         matklad.rust-analyzer
         timonwong.shellcheck
       ];
-    userSettings = (import ./theme.nix) config.raccoon.styles.colors.hashed;
+    userSettings = {
+      "editor.fontFamily" = config.raccoon.styles.fonts.mono;
+    } // (import ./theme.nix) config.raccoon.styles.colors.hashed;
   };
 }
