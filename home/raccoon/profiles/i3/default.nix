@@ -112,18 +112,12 @@ in {
           "${mod}+i" = "focus child";
           "${mod}+o" = "focus parent";
 
-          "${mod}+grave" = "workspace 0";
+          "${mod}+grave" = "workspace 0:~";
           "${mod}+1" = "workspace 1";
           "${mod}+2" = "workspace 2";
           "${mod}+3" = "workspace 3";
-          "${mod}+4" = "workspace 4";
-          "${mod}+5" = "workspace 5";
-          "${mod}+6" = "workspace 6";
-          "${mod}+7" = "workspace 7";
-          "${mod}+8" = "workspace 8";
-          "${mod}+9" = "workspace 9";
-          "${mod}+0" = "scratchpad show";
-          "${mod}+-" = "workspace -";
+          "${mod}+4" = "workspace 4:...";
+          "${mod}+Tab" = "scratchpad show";
 
           "${mod}+f" = "fullscreen toggle";
 
@@ -132,18 +126,12 @@ in {
           "${shift}+k" = "move up";
           "${shift}+l" = "move right";
 
-          "${shift}+grave" = "move container to workspace 0";
+          "${shift}+grave" = "move container to workspace 0:~";
           "${shift}+1" = "move container to workspace 1";
           "${shift}+2" = "move container to workspace 2";
           "${shift}+3" = "move container to workspace 3";
-          "${shift}+4" = "move container to workspace 4";
-          "${shift}+5" = "move container to workspace 5";
-          "${shift}+6" = "move container to workspace 6";
-          "${shift}+7" = "move container to workspace 7";
-          "${shift}+8" = "move container to workspace 8";
-          "${shift}+9" = "move container to workspace 9";
-          "${shift}+0" = "move scratchpad";
-          "${shift}+-" = "move container to workspace -";
+          "${shift}+4" = "move container to workspace 4:...";
+          "${shift}+Tab" = "move scratchpad";
 
           "${shift}+i" = "move workspace to output left";
           "${shift}+o" = "move workspace to output right";
@@ -232,21 +220,20 @@ in {
               text = light;
             };
           };
+
+          extraConfig = ''
+            strip_workspace_numbers yes
+          '';
         }];
       };
       extraConfig = ''
-        workspace 0 output primary
+        workspace 0:~ output primary
         workspace 1 output primary
         workspace 2 output primary
         workspace 3 output primary
-        workspace 4 output primary
-        workspace 5 output primary
-        workspace 6 output primary
-        workspace 7 output primary
-        workspace 8 output primary
-        workspace 9 output primary
-        workspace - output primary
+        workspace 4:... output primary
       '';
     };
   };
 }
+
