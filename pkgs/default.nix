@@ -9,6 +9,8 @@ raccoonlib: final: prev: {
     blesh_0_4 = callPackage ./blesh/0_4.nix { };
     blesh = blesh_0_3;
 
+    grafx2 = callPackage ./grafx2 { };
+
     jame = callPackage ./jame { };
     vscode-extensions =
       prev.recurseIntoAttrs (callPackage ./vscode-extensions { });
