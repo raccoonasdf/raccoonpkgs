@@ -38,23 +38,19 @@
 
       hostFilesIn = path:
         let suffix = ".host.nix";
-        in filter (file: hasAttr file.host hosts) (map (file: {
+        in map (file: {
           path = path + ("/" + file);
           host = removeSuffix suffix file;
         }) (filter (file: hasSuffix suffix file)
-          (attrNames (builtins.readDir path))));
+          (attrNames (builtins.readDir path)));
 
-      hosts = mapAttrs (_: v:
-        {
-          system = defaultSystem;
-          allowUnfree = true;
-          sshUser = "raccoon";
-        } // v) {
-          darvaza = { };
-          oberon = { hostname = "oberon.raccoon.fun"; };
-          flock-nixos = { hostname = "192.168.122.78"; };
-          iso = { };
-        };
+      defaultHost = {
+        system = defaultSystem;
+        allowUnfree = true;
+        sshUser = "raccoon";
+      };
+
+      hosts = mapAttrs (_: v: defaultHost // v) (import ./hosts.nix);
     in utils.lib.systemFlake {
       lib = raccoonlib;
 
@@ -103,7 +99,7 @@
       ];
 
       hosts = listToAttrs (map (file:
-        nameValuePair file.host (let host = hosts.${file.host};
+        nameValuePair file.host (let host = hosts.${file.host} or defaultHost;
         in rec {
           inherit (host) system;
 
@@ -132,7 +128,7 @@
           (hostFilesIn (./home + "/${username}/profiles"))) userDirs);
       in listToAttrs (map ({ username, file }:
         nameValuePair (username + "@" + file.host)
-        (let host = hosts.${file.host};
+        (let host = hosts.${file.host} or defaultHost;
         in home-manager.lib.homeManagerConfiguration {
           inherit (host) system;
           inherit username;
