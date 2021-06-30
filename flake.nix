@@ -29,7 +29,7 @@
     let
       raccoonlib = (import ./lib) nixpkgs.lib;
 
-      inherit (raccoonlib) defaultSystem forAllSystems;
+      inherit (raccoonlib) forAllSystems;
 
       _specialArgs = forAllSystems (system: {
         inherit raccoonlib;
@@ -43,14 +43,10 @@
           host = removeSuffix suffix file;
         }) (filter (file: hasSuffix suffix file)
           (attrNames (builtins.readDir path)));
+      
+      hostsConfig = (import ./hosts.nix) { lib = nixpkgs.lib; inherit raccoonlib; };
 
-      defaultHost = {
-        system = defaultSystem;
-        allowUnfree = true;
-        sshUser = "raccoon";
-      };
-
-      hosts = mapAttrs (_: v: defaultHost // v) (import ./hosts.nix);
+      hosts = mapAttrs (_: v: hostsConfig.default // v) hostsConfig;
     in utils.lib.systemFlake {
       lib = raccoonlib;
 
@@ -99,7 +95,7 @@
       ];
 
       hosts = listToAttrs (map (file:
-        nameValuePair file.host (let host = hosts.${file.host} or defaultHost;
+        nameValuePair file.host (let host = hosts.${file.host} or hosts.default;
         in rec {
           inherit (host) system;
 
@@ -128,7 +124,7 @@
           (hostFilesIn (./home + "/${username}/profiles"))) userDirs);
       in listToAttrs (map ({ username, file }:
         nameValuePair (username + "@" + file.host)
-        (let host = hosts.${file.host} or defaultHost;
+        (let host = hosts.${file.host} or hosts.default;
         in home-manager.lib.homeManagerConfiguration {
           inherit (host) system;
           inherit username;
