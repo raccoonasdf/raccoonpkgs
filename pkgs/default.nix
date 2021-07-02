@@ -17,6 +17,8 @@ raccoonlib: final: prev: {
     racmenu = callPackage ./racmenu { };
     racscrot = callPackage ./racscrot { };
 
+    scala-music = callPackage ./scala-music { };
+
     raccoon-install-tools = callPackage ./raccoon-install-tools { };
   };
 }
