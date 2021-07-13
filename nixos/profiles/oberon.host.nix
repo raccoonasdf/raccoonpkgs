@@ -1,6 +1,7 @@
 { lib, config, modulesPath, ... }: {
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
+    ./nebula
     ./raccoon.fun
     ./users/raccoon.nix
   ];
