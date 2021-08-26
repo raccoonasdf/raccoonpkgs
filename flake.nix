@@ -106,6 +106,9 @@
             ./nixos/modules
             ./nixos/profiles
             file.path
+            {
+              system.stateVersion = host.stateVersion;
+            }
           ];
 
           specialArgs = _specialArgs.${system};
@@ -126,7 +129,7 @@
         nameValuePair (username + "@" + file.host)
         (let host = hosts.${file.host} or hosts.default;
         in home-manager.lib.homeManagerConfiguration {
-          inherit (host) system;
+          inherit (host) stateVersion system;
           inherit username;
 
           homeDirectory = "/home/${username}";
