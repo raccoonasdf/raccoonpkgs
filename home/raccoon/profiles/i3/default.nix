@@ -97,9 +97,9 @@ in {
           "Shift+Print" =
             "exec ${racscrot}/bin/racscrot -su ${screenshotsLocation}";
 
+          # implicitly requires lightdm
+          "${shift}+Home" = "dm-tool lock";
           "${shift}+Delete" = "exit";
-          "${shift}+End" = "dm-tool lock";
-          "${shift}+r" = "restart";
 
           "${mod}+w" = "kill";
 
