@@ -51,6 +51,4 @@
     enable = true;
     environmentFile = config.age.secrets.jame-environment.path;
   };
-
-  system.stateVersion = "20.09";
 }
