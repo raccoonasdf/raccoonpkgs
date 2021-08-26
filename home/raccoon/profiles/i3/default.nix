@@ -40,9 +40,20 @@ in {
           separator_bg = "auto";
           separator_fg = "light";
         };
-        icons.overrides = { time = "it is"; };
+        icons.overrides = { time = ""; cpu = ""; memory_mem = ""; };
       };
       blocks = [
+        {
+          block = "focused_window";
+        }
+        {
+          block = "cpu";
+        }
+        {
+          block = "memory";
+          format_mem = "{mem_avail;M}";
+          clickable = false;
+        }
         {
           block = "custom";
           shell = "sh";
@@ -51,7 +62,7 @@ in {
         }
         {
           block = "time";
-          format = "%a %F at %T%z";
+          format = "%F %a @ %T%z";
           interval = 1;
         }
       ];
