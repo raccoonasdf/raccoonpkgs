@@ -1,5 +1,5 @@
 {
-  imports = [ ./static.nix ./matrix.nix ./thelounge.nix ];
+  imports = [ ./web.nix ./matrix.nix ./thelounge.nix ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
