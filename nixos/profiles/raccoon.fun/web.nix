@@ -1,4 +1,5 @@
-let config = import ./config.nix;
+{ config, ... }:
+let c = import ./config.nix;
 in {
   services.nginx = {
     enable = true;
@@ -10,17 +11,17 @@ in {
     recommendedProxySettings = true;
 
     virtualHosts = {
-      "${config.domain}" = {
+      "${c.domain}" = {
         forceSSL = true;
         enableACME = true;
 
-        locations."/".return = "301 https://www.${config.domain}$request_uri";
+        locations."/".return = "301 https://www.${c.domain}$request_uri";
       };
 
-      "www.${config.domain}" = {
+      "www.${c.domain}" = {
         forceSSL = true;
         enableACME = true;
-        root = "${config.root}/zone";
+        root = "${c.root}/zone";
 
         extraConfig = ''
           error_page 403 404 /errors/4xx.html;
@@ -30,15 +31,22 @@ in {
         '';
 
         locations = {
-          "/".tryFiles = "$uri $uri/ $uri.html =404";
+          "~ \.php$".extraConfig = ''
+            fastcgi_pass unix:${config.services.phpfpm.pools.raccoon.socket};
+            fastcgi_index index.php;
+          '';
+          "/" = {
+            index = "index.html index.php";
+            tryFiles = "$uri $uri/ $uri.html =404";
+          };
           "/errors/".extraConfig = "internal;";
         };
       };
 
-      "bits.${config.domain}" = {
+      "bits.${c.domain}" = {
         forceSSL = true;
         enableACME = true;
-        root = "${config.root}/bits";
+        root = "${c.root}/bits";
 
         locations = {
           "/" = { tryFiles = "$uri $uri/ $uri.html =404"; };
@@ -54,10 +62,10 @@ in {
         };
       };
 
-      "brownies.${config.domain}" = {
+      "brownies.${c.domain}" = {
         forceSSL = true;
         enableACME = true;
-        root = "${config.root}/brownies";
+        root = "${c.root}/brownies";
         extraConfig = "error_page 404 /404/;";
 
         locations = {
@@ -65,6 +73,15 @@ in {
           "/404/".extraConfig = "internal;";
         };
       };
+    };
+  };
+
+  services.phpfpm.pools.raccoon = {
+    user = "nobody";
+    settings = {
+      pm = "ondemand";
+      "listen.owner" = config.services.nginx.user;
+      "pm.max_children" = 8;
     };
   };
 }
