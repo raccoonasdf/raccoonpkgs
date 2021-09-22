@@ -43,6 +43,11 @@
   networking = {
     usePredictableInterfaceNames = false;
     interfaces.eth0.useDHCP = true;
+
+    # bandaid for linode networking issues
+    dhcpcd.extraConfig = ''
+      noarp
+    '';
   };
 
   services.openssh.enable = true;
