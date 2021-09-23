@@ -56,4 +56,8 @@
     enable = true;
     environmentFile = config.age.secrets.jame-environment.path;
   };
+
+  services.fuzzball = {
+    enable = true;
+  };
 }
