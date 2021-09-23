@@ -1,1 +1,1 @@
-{ imports = [ ./services/jame.nix ]; }
+{ imports = [ ./services/jame.nix ./services/fuzzball.nix ]; }
