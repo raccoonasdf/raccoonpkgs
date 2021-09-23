@@ -77,11 +77,19 @@ in {
   };
 
   services.phpfpm.pools.raccoon = {
-    user = "nobody";
+    user = "phpfpm";
     settings = {
       pm = "ondemand";
       "listen.owner" = config.services.nginx.user;
       "pm.max_children" = 8;
     };
+  };
+
+  users = {
+    users.phpfpm = {
+      isSystemUser = true;
+      group = "phpfpm";
+    };
+    groups.phpfpm = { };
   };
 }
