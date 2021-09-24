@@ -60,7 +60,7 @@ in {
           mkdir -p "$dataDir"
           echo "Populating newly created $dataDir with defaults from $skel"
           cp -r "$skel/." "$dataDir"
-          chmod -R u=rwX "$dataDir"
+          chmod -R u=rwX,g=rX "$dataDir"
         fi
 
         chown -R "fuzzball:fuzzball" "${cfg.dataDir}"
