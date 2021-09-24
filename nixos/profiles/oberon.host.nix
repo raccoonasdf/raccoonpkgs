@@ -60,4 +60,6 @@
   services.fuzzball = {
     enable = true;
   };
+
+  users.users.raccoon.extraGroups = [ "fuzzball" ];
 }
