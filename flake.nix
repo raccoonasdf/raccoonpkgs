@@ -43,8 +43,11 @@
           host = removeSuffix suffix file;
         }) (filter (file: hasSuffix suffix file)
           (attrNames (builtins.readDir path)));
-      
-      hostsConfig = (import ./hosts.nix) { lib = nixpkgs.lib; inherit raccoonlib; };
+
+      hostsConfig = (import ./hosts.nix) {
+        lib = nixpkgs.lib;
+        inherit raccoonlib;
+      };
 
       hosts = mapAttrs (_: v: hostsConfig.default // v) hostsConfig;
     in utils.lib.systemFlake {
@@ -60,6 +63,12 @@
             config.allowUnfree = true;
           };
         in (self.overlay { } prev).rac);
+
+      apps = forAllSystems (system:
+        mapAttrs (pkg: bin: {
+          type = "app";
+          program = "${self.legacyPackages.${system}.${pkg}}${bin}";
+        }) (import ./pkgs/apps.nix));
 
       #######################
       # NixOS Configuration #
@@ -106,9 +115,7 @@
             ./nixos/modules
             ./nixos/profiles
             file.path
-            {
-              system.stateVersion = host.stateVersion;
-            }
+            { system.stateVersion = host.stateVersion; }
           ];
 
           specialArgs = _specialArgs.${system};

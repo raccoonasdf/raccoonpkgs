@@ -18,7 +18,6 @@ stdenv.mkDerivation rec {
   installPhase = ''
     mkdir -p $out
     make install DESTDIR=$out PREFIX=""
-    mv $out/bin/grafx2-sdl $out/bin/grafx2 # so you can `nix run`
   '';
 
   meta = with lib; with raccoonlib; {
