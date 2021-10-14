@@ -50,7 +50,7 @@
       };
 
       hosts = mapAttrs (_: v: hostsConfig.default // v) hostsConfig;
-    in utils.lib.systemFlake {
+    in utils.lib.mkFlake {
       lib = raccoonlib;
 
       overlay = (import ./pkgs) self.lib;
@@ -109,13 +109,16 @@
           inherit (host) system;
 
           modules = [
-            utils.nixosModules.saneFlakeDefaults
             agenix.nixosModules.age
             home-manager.nixosModules.home-manager
             ./nixos/modules
             ./nixos/profiles
             file.path
-            { system.stateVersion = host.stateVersion; }
+            {
+              system.stateVersion = host.stateVersion;
+
+              nix.generateRegistryFromInputs = true;
+            }
           ];
 
           specialArgs = _specialArgs.${system};
