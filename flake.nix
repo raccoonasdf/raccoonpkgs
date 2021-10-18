@@ -64,12 +64,6 @@
           };
         in (self.overlay { } prev).rac);
 
-      apps = forAllSystems (system:
-        mapAttrs (pkg: bin: {
-          type = "app";
-          program = "${self.legacyPackages.${system}.${pkg}}${bin}";
-        }) (import ./pkgs/apps.nix));
-
       #######################
       # NixOS Configuration #
       #######################

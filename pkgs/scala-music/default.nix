@@ -60,5 +60,6 @@ in stdenv.mkDerivation {
       license = licenses.unfreeRedistributable;
       platforms = [ "x86_64-linux" ];
       maintainers = [ maintainers.raccoon ];
+      mainProgram = "scala";
     };
 }
