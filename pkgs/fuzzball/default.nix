@@ -37,5 +37,6 @@ stdenv.mkDerivation rec {
       description = "An online interactive multiplayer chat/role-play MUD server with a persistent database";
       license = licenses.gpl3Only;
       maintainers = [ maintainers.raccoon ];
+      mainProgram = "fbmuck";
     };
 }
