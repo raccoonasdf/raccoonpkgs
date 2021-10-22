@@ -1,20 +1,9 @@
 { lib, pkgs, raccoonpkgs, ... }:
 with lib; {
   base16ify = scheme: src:
-    pkgs.stdenv.mkDerivation rec {
-      name = "base16ify-" + (baseNameOf (toString src));
-
-      inherit src;
-
+    pkgs.runCommand "base16ify-${baseNameOf (toString src)}" {
       nativeBuildInputs = [ raccoonpkgs.base16ify ];
-
-      dontUnpack = true;
-      dontBuild = true;
-
-      installPhase = ''
-        base16ify <(echo "${scheme.json}") ${src} $out
-      '';
-    };
+    } ''base16ify <(echo "${scheme.json}") ${src} $out'';
 
   schemes = mapAttrs (n: v:
     v // {
