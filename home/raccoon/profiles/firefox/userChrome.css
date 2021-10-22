@@ -1,0 +1,45 @@
+/* hide tab bar */
+
+#main-window[tabsintitlebar="true"]:not([extradragspace="true"]) #TabsToolbar > .toolbar-items {
+  opacity: 0;
+  pointer-events: none;
+}
+
+#main-window:not([tabsintitlebar="true"]) #TabsToolbar {
+    visibility: collapse !important;
+}
+
+
+/* hide close buttons and icons in the sidebar */
+
+#sidebar-close {
+    visibility: collapse;
+}
+
+#sidebar-icon {
+    width: 0px !important; /* anchored context menu flips out if collapsed */
+}
+
+#sidebar-title {
+    padding-inline-start: 0;
+}
+
+
+/* allow find bar to scroll */
+
+.findbar-container {
+    overflow-x: scroll;
+    padding-block: 4px;
+    height: unset !important;
+}
+
+findbar {
+    padding-block: 0;
+}
+
+
+/* don't animate navigator show/hide */
+
+#navigator-toolbox[fullscreenShouldAnimate] {
+  transition: 0s !important;
+}

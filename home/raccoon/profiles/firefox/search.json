@@ -1,0 +1,50 @@
+{
+  "version": 6,
+  "engines": [
+    {
+      "_name": "Google",
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      }
+    },
+    {
+      "_name": "Amazon.com",
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      }
+    },
+    {
+      "_name": "Wikipedia (en)",
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      }
+    },
+    {
+      "_name": "Bing",
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      }
+    },
+    {
+      "_name": "DuckDuckGo",
+      "_isAppProvided": true,
+      "_metaData": {}
+    },
+    {
+      "_name": "eBay",
+      "_isAppProvided": true,
+      "_metaData": {
+        "hidden": true
+      }
+    }
+  ],
+  "metaData": {
+    "useSavedOrder": false,
+    "current": "DuckDuckGo",
+    "hash": "R7N47ttOg7ASGpRdJxiiILLG5FfcDOsqmA0cf857jZk="
+  }
+}

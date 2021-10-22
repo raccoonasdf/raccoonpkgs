@@ -8,6 +8,8 @@ raccoonlib: final: prev: {
     blesh_0_3 = callPackage ./blesh/0_3.nix { };
     blesh_0_4 = callPackage ./blesh/0_4.nix { };
     blesh = blesh_0_3;
+    
+    dejsonlz4 = callPackage ./dejsonlz4 { };
 
     fuzzball = callPackage ./fuzzball { };
 

@@ -1,6 +1,6 @@
 { pkgs, ... }: {
   imports =
-    [ ./alacritty ./dunst ./gammastep ./gtk ./i3 ./mpv ./qutebrowser ./vscode ];
+    [ ./alacritty ./dunst ./gammastep ./gtk ./i3 ./mpv ./firefox ./vscode ];
 
   home.packages = with pkgs; [ dragon-drop ];
 
