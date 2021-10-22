@@ -32,20 +32,9 @@ in {
 
   # firefox doesn't sync search engines :(
   home.file."${profilesPath}/${config.programs.firefox.profiles.raccoon.path}/search.json.mozlz4".source =
-    pkgs.stdenv.mkDerivation rec {
-      name = "search.json.mozlz4";
-
-      src = ./search.json;
-
+    pkgs.runCommand "search.json.mozlz4" {
       nativeBuildInputs = [ raccoonpkgs.dejsonlz4 pkgs.jq ];
+    } "jq -c . ${./search.json} | jsonlz4 - $out";
 
-      dontUnpack = true;
-      dontBuild = true;
-
-      installPhase = ''
-        jq -c . ${src} | jsonlz4 - $out
-      '';
-    };
-  
   # TODO: depend on Firefox Sync less
 }
