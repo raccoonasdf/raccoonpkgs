@@ -40,19 +40,12 @@ in {
           separator_bg = "auto";
           separator_fg = "light";
         };
-        icons.overrides = { time = ""; cpu = ""; memory_mem = ""; };
+        icons.overrides = { time = ""; };
       };
       blocks = [
         {
           block = "focused_window";
-        }
-        {
-          block = "cpu";
-        }
-        {
-          block = "memory";
-          format_mem = "{mem_avail;M}";
-          clickable = false;
+          max_width = 64;
         }
         {
           block = "custom";
