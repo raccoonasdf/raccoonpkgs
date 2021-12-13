@@ -48,17 +48,23 @@ in {
         enableACME = true;
         root = "${c.root}/bits";
 
+        extraConfig = ''
+          types {
+            text/plain nix;
+          }
+        '';
+
         locations = {
           "/" = { tryFiles = "$uri $uri/ $uri.html =404"; };
 
-          "/nixos-guide/src/" = {
-            extraConfig = ''
-              autoindex on;
-              types {
-                application/json theme;
-              }
-            '';
-          };
+          "/nixos-guide/src/".extraConfig = ''
+            autoindex on;
+            types {
+              application/json theme;
+            }
+          '';
+
+          "/index/".extraConfig = "autoindex on;";
         };
       };
 
