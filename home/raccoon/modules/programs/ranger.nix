@@ -36,7 +36,7 @@ in {
     package = mkOption {
       type = types.package;
       default = pkgs.ranger;
-      defaultText = literalExample "pkgs.ranger";
+      defaultText = literalExpression "pkgs.ranger";
       description = ''
         Package providing the <code>ranger</code> command.
       '';
