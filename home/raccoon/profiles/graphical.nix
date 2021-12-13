@@ -1,8 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, raccoonpkgs, ... }: {
   imports =
     [ ./alacritty ./dunst ./gammastep ./gtk ./i3 ./mpv ./firefox ./vscode ];
 
-  home.packages = with pkgs; [ dragon-drop ];
+  home.packages = with raccoonpkgs; [ dragon-drop ];
 
   xsession.pointerCursor = {
     package = pkgs.openzone-cursors;
