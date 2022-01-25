@@ -38,7 +38,7 @@ in {
           critical_fg = urgent;
           separator = "|";
           separator_bg = "auto";
-          separator_fg = "light";
+          separator_fg = "auto";
         };
         icons.overrides = { time = ""; };
       };
@@ -104,6 +104,8 @@ in {
           # implicitly requires lightdm
           "${shift}+Home" = "dm-tool lock";
           "${shift}+Delete" = "exit";
+
+          "${shift}+r" = "restart";
 
           "${mod}+w" = "kill";
 
