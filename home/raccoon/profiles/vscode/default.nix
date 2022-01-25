@@ -21,7 +21,7 @@
         tamasfe.even-better-toml
         yzhang.markdown-all-in-one
         dawhite.mustache
-        bbenoist.Nix
+        bbenoist.nix
         ms-python.python
         matklad.rust-analyzer
         timonwong.shellcheck
