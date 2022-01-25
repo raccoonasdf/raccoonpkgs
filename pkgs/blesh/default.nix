@@ -1,14 +1,17 @@
-{ version, rev, hash, patches }:
-{ lib, raccoonlib, stdenv, fetchFromGitHub }:
+{ lib, raccoonlib, stdenv, fetchFromGitHub, writeShellScriptBin }:
 stdenv.mkDerivation {
   pname = "blesh";
-  inherit version patches;
+  version = "0.4.0-git";
 
   src = fetchFromGitHub {
     owner = "akinomyoga";
     repo = "ble.sh";
-    inherit rev hash;
+    rev = "b4bd955e6ed56d29df389fcc4472b9cbbffc04d0";
+    hash = "sha256-LqvUJREKbFVSG4+WXrYnuvXbgIbSDMyr0TPFbMys/I8=";
+    fetchSubmodules = true;
   };
+
+  nativeBuildInputs = [ (writeShellScriptBin "git" "") ];
 
   installPhase = ''
     make install INSDIR=$out/share/blesh

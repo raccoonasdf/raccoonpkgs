@@ -1,5 +1,5 @@
 { lib, pkgs, config, ... }: {
-  imports = [ ./fish ./git ./htop ./kakoune ./ranger ./ssh ];
+  imports = [ ./bash ./fish ./git ./htop ./kakoune ./ranger ./ssh ];
 
   home.packages = with pkgs; [ atool fd manix nixfmt ripgrep ];
 

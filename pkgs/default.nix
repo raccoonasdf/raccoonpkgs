@@ -4,10 +4,7 @@ raccoonlib: final: prev: {
     callPackage = prev.lib.callPackageWith (prev // { inherit raccoonlib; });
   in rec {
     base16ify = callPackage ./base16ify { };
-
-    blesh_0_3 = callPackage ./blesh/0_3.nix { };
-    blesh_0_4 = callPackage ./blesh/0_4.nix { };
-    blesh = blesh_0_3;
+    blesh = callPackage ./blesh { };
     
     dejsonlz4 = callPackage ./dejsonlz4 { };
     dragon-drop = callPackage ./dragon-drop { };
