@@ -11,6 +11,8 @@ stdenv.mkDerivation {
     fetchSubmodules = true;
   };
 
+  # we're already fetching the submodule, but ble.sh's makefile tries to
+  # `git submodule update` anyway. just give it a fake git :)
   nativeBuildInputs = [ (writeShellScriptBin "git" "") ];
 
   installPhase = ''
