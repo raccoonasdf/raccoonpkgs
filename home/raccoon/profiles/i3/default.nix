@@ -69,7 +69,7 @@ in {
       config = let places = config.raccoon.places;
       in {
         focus.mouseWarping = false;
-        workspaceLayout = "stacked";
+        workspaceLayout = "stacking";
 
         modifier = "Mod4";
 
