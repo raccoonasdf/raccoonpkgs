@@ -10,6 +10,13 @@ in {
     recommendedGzipSettings = true;
     recommendedProxySettings = true;
 
+    appendHttpConfig = ''
+      types {
+        text/plain nix;
+        application/json theme;
+      }
+    '';
+
     virtualHosts = {
       "${c.domain}" = {
         forceSSL = true;
@@ -48,21 +55,10 @@ in {
         enableACME = true;
         root = "${c.root}/bits";
 
-        extraConfig = ''
-          types {
-            text/plain nix;
-          }
-        '';
-
         locations = {
           "/" = { tryFiles = "$uri $uri/ $uri.html =404"; };
 
-          "/nixos-guide/src/".extraConfig = ''
-            autoindex on;
-            types {
-              application/json theme;
-            }
-          '';
+          "/nixos-guide/src/".extraConfig = "autoindex on;";
 
           "/index/".extraConfig = "autoindex on;";
         };
