@@ -5,6 +5,6 @@
 
   security.acme = {
     acceptTerms = true;
-    email = "raccoon@raccoon.fun";
+    defaults.email = "raccoon@raccoon.fun";
   };
 }

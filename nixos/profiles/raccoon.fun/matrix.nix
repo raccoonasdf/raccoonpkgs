@@ -14,25 +14,25 @@ in {
 
   services.matrix-synapse = {
     enable = true;
-    server_name = "${config.domain}";
-    extraConfig = ''
-      limit_remote_rooms:
-        enabled: true
-        complexity: 32.0
-    '';
+    settings = {
+      server_name = "${config.domain}";
+      limit_remote_rooms = {
+        enabled = true;
+        complexity = 32.0;
+      };
+      listeners = [{
+        port = 8008;
+        bind_addresses = [ "::1" ];
+        type = "http";
+        tls = false;
+        x_forwarded = true;
 
-    listeners = [{
-      port = 8008;
-      bind_address = "::1";
-      type = "http";
-      tls = false;
-      x_forwarded = true;
-
-      resources = [{
-        names = [ "client" "federation" ];
-        compress = false;
+        resources = [{
+          names = [ "client" "federation" ];
+          compress = false;
+        }];
       }];
-    }];
+    };
   };
 
   services.nginx.virtualHosts = {

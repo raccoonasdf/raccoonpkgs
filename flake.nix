@@ -2,7 +2,7 @@
   description = "raccoon's radicool flakey nix stuff";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
 
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
