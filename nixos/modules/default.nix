@@ -1,1 +1,1 @@
-{ imports = [ ./services/jame.nix ./services/fuzzball.nix ]; }
+{ imports = [ ./services/jame.nix ./services/fuzzball.nix ./raccoon/postgresql-activation.nix ]; }
