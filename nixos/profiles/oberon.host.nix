@@ -6,12 +6,9 @@
     ./users/raccoon.nix
   ];
 
-  age.secrets = {
-    raccoon-password.file = ../secrets/oberon-raccoon-password;
-    jame-environment = {
-      file = ../secrets/jame-environment;
-      owner = "jame";
-    };
+  age.secrets.jame-environment = {
+    file = ../secrets/jame-environment;
+    owner = "jame";
   };
 
   boot = {

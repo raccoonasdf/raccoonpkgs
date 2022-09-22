@@ -5,8 +5,6 @@
     ./users/raccoon.nix
   ];
 
-  age.secrets.raccoon-password.file = ../secrets/flock-nixos-raccoon-password;
-
   boot = {
     kernelModules = [ "kvm-amd" ];
     initrd.availableKernelModules =
