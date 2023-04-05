@@ -30,24 +30,8 @@ in {
         enableACME = true;
         root = "${c.root}/zone";
 
-        extraConfig = ''
-          error_page 403 404 /errors/4xx.html;
-          error_page 500 502 503 504 /errors/5xx.html;
-
-          limit_rate 192k;
-        '';
-
-        locations = {
-          "~ \.php$".extraConfig = ''
-            fastcgi_pass unix:${config.services.phpfpm.pools.raccoon.socket};
-            fastcgi_index index.php;
-          '';
-          "/" = {
-            index = "index.html index.php";
-            tryFiles = "$uri $uri/ $uri.html =404";
-          };
-          "/errors/".extraConfig = "internal;";
-        };
+        # ssg-defined configs without a rebuild
+        extraConfig = "include ${c.root}/zone/nginx.conf;";
       };
 
       "bits.${c.domain}" = {
