@@ -37,23 +37,29 @@
       });
 
       hostFilesIn = path:
-        let suffix = ".host.nix";
-        in map (file: {
-          path = path + ("/" + file);
-          host = removeSuffix suffix file;
-        }) (filter (file: hasSuffix suffix file)
-          (attrNames (builtins.readDir path)));
+        let
+          suffix = ".host.nix";
 
-      hostsConfig = (import ./hosts.nix) {
-        lib = nixpkgs.lib;
-        inherit raccoonlib;
-      };
+          mkHostFile = file: {
+            path = path + ("/" + file);
+            host = removeSuffix suffix file;
+          };
+          hostFileNames = filter (file: hasSuffix suffix file)
+            (attrNames (builtins.readDir path));
+        in map mkHostFile hostFileNames;
 
-      hosts = mapAttrs (_: v: hostsConfig.default // v) hostsConfig;
+      nodes = let
+        nodesConfig = (import ./nodes.nix) {
+          lib = nixpkgs.lib;
+          inherit raccoonlib;
+        };
+      in mapAttrs (_: v: nodesConfig.default // v) nodesConfig;
+
+      getNode = name: nodes.${name} or nodes.default;
     in utils.lib.mkFlake {
       lib = raccoonlib;
 
-      overlay = (import ./pkgs) self.lib;
+      overlays.default = (import ./pkgs) self.lib;
 
       # regular old `packages` doesn't like sub-sets of packages
       legacyPackages = forAllSystems (system:
@@ -62,7 +68,7 @@
             inherit system;
             config.allowUnfree = true;
           };
-        in (self.overlay { } prev).rac);
+        in (self.overlays.default { } prev).rac);
 
       #######################
       # NixOS Configuration #
@@ -89,116 +95,141 @@
 
       sharedOverlays = [
         nur.overlay
-        agenix.overlay
-        self.overlay
+        agenix.overlays.default
+        self.overlays.default
         (final: prev: {
           home-manager =
             prev.callPackage "${home-manager}/home-manager" { path = "./."; };
         }) # is this the right way to do this?
       ];
 
-      hosts = listToAttrs (map (file:
-        nameValuePair file.host (let host = hosts.${file.host} or hosts.default;
-        in rec {
-          inherit (host) system;
+      hosts = let
+        mkHost = file:
+          let node = getNode file.host;
+          in rec {
+            inherit (node) system;
 
-          modules = [
-            agenix.nixosModules.age
-            home-manager.nixosModules.home-manager
-            ./nixos/modules
-            ./nixos/profiles
-            file.path
-            {
-              system.stateVersion = host.stateVersion;
+            modules = [
+              agenix.nixosModules.age
+              home-manager.nixosModules.home-manager
+              ./nixos/modules
+              ./nixos/profiles
+              file.path
+              {
+                system.stateVersion = node.stateVersion;
 
-              nix.generateRegistryFromInputs = true;
-            }
-          ];
+                nix.generateRegistryFromInputs = true;
+              }
+            ];
 
-          specialArgs = _specialArgs.${system};
-        })) (hostFilesIn ./nixos/profiles));
+            specialArgs = _specialArgs.${system};
+          };
+
+        mkHostPair = file: nameValuePair file.host (mkHost file);
+      in listToAttrs (map mkHostPair (hostFilesIn ./nixos/profiles));
 
       ##############################
       # Home Manager Configuration #
       ##############################
 
       homeConfigurations = let
-        userDirs = attrNames (filterAttrs (_: type: type == "directory")
-          (builtins.readDir ./home));
+        dirsIn = path:
+          attrNames
+          (filterAttrs (_: type: type == "directory") (builtins.readDir path));
+        userDirs = dirsIn ./home;
 
-        userHostFiles = flatten (map (username:
+        userDirHostFiles = username:
           map (file: { inherit username file; })
-          (hostFilesIn (./home + "/${username}/profiles"))) userDirs);
-      in listToAttrs (map ({ username, file }:
-        nameValuePair (username + "@" + file.host)
-        (let host = hosts.${file.host} or hosts.default;
-        in home-manager.lib.homeManagerConfiguration {
-          inherit (host) stateVersion system;
-          inherit username;
+          (hostFilesIn (./home + "/${username}/profiles"));
 
-          homeDirectory = "/home/${username}";
+        userDirsHostFiles = flatten (map userDirHostFiles userDirs);
 
-          extraSpecialArgs = _specialArgs.${host.system};
+        mkHomeConfiguration = { username, file }:
+          let node = getNode file.host;
+          in home-manager.lib.homeManagerConfiguration {
+            inherit (node) stateVersion system;
+            inherit username;
 
-          extraModules = [
-            (./home + "/${username}/modules")
-            (./home + "/${username}/profiles")
-            file.path
-          ];
+            homeDirectory = "/home/${username}";
 
-          configuration = {
-            nixpkgs = {
-              config = { inherit (host) allowUnfree; };
+            extraSpecialArgs = _specialArgs.${node.system};
 
-              overlays = [
-                nur.overlay
-                agenix.overlay
-                self.overlay
-                (final: prev: {
-                  inherit (unstable) # ...
-                  ;
-                })
-              ];
+            extraModules = [
+              (./home + "/${username}/modules")
+              (./home + "/${username}/profiles")
+              file.path
+            ];
+
+            configuration = {
+              nixpkgs = {
+                config = { inherit (host) allowUnfree; };
+
+                overlays = [
+                  nur.overlay
+                  agenix.overlays.default
+                  self.overlays.default
+                  (final: prev: {
+                    inherit (unstable) # ...
+                    ;
+                  })
+                ];
+              };
             };
           };
-        })) userHostFiles);
+
+        mkHomeConfigurationPair = hostFile@{ username, file }:
+          nameValuePair (username + "@" + file.host)
+          (mkHomeConfiguration hostFile);
+      in listToAttrs (map mkHomeConfigurationPair userDirsHostFiles);
 
       ###########################
       # deploy-rs Configuration #
       ###########################
 
-      deploy.nodes = mapAttrs (host:
-        { system, hostname, sshUser, ... }:
-        let
-          homesOnHost = filter (home: host == home.host) (map (authority:
-            let splitAuthority = splitString "@" authority;
-            in {
-              inherit authority;
-              user = head splitAuthority;
-              host = if (length splitAuthority) > 1 then
-                (last splitAuthority)
-              else
-                null;
-            }) (attrNames self.homeConfigurations));
+      deploy.nodes = let
+        mkAuthority = authority:
+          let splitAuthority = splitString "@" authority;
+          in {
+            inherit authority;
+            user = head splitAuthority;
+            host = if (length splitAuthority) > 1 then
+              (last splitAuthority)
+            else
+              null;
+          };
 
-          systemProfiles = if (hasAttr host self.nixosConfigurations) then {
-            system = {
-              path = deploy-rs.lib.${system}.activate.nixos
-                self.nixosConfigurations.${host};
-              user = "root";
-            };
-          } else
-            { };
+        homeAuthorities = map mkAuthority (attrNames self.homeConfigurations);
 
-          homeProfiles = listToAttrs (builtins.map ({ authority, user, ... }:
-            nameValuePair ("home-" + user) {
+        homesOn = host: filter (home: host == home.host) homeAuthorities;
+
+        mkNode = host:
+          { system, hostname, sshUser, ... }:
+          let
+            systemProfiles = if (hasAttr host self.nixosConfigurations) then {
+              system = {
+                path = deploy-rs.lib.${system}.activate.nixos
+                  self.nixosConfigurations.${host};
+                user = "root";
+              };
+            } else
+              { };
+
+            mkHomeProfile = { authority, user, ... }: {
               path = deploy-rs.lib.${system}.activate.home-manager
                 self.homeConfigurations.${authority};
               inherit user;
-            }) homesOnHost);
-        in {
-          inherit hostname sshUser;
-          profiles = systemProfiles // homeProfiles;
-        }) (filterAttrs (_: v: v ? hostname) hosts);
+            };
+
+            mkHomeProfilePair = homeAuthority@{ user, ... }:
+              nameValuePair ("home-" + user) (mkHomeProfile homeAuthority);
+
+            homeProfiles = listToAttrs (map mkHomeProfilePair (homesOn host));
+          in {
+            inherit hostname sshUser;
+            profiles = systemProfiles // homeProfiles;
+          };
+
+        validNodes = filterAttrs (_: v: v ? hostname) nodes;          
+      in mapAttrs mkNode validNodes;
     };
 }
