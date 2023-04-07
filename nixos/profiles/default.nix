@@ -20,7 +20,7 @@
       automatic = lib.mkBefore true;
       options = lib.mkBefore "--delete-older-than 7d";
     };
-    trustedUsers = [ "@wheel" ];
+    settings.trusted-users = [ "@wheel" ];
   };
 
   security.sudo.wheelNeedsPassword = lib.mkBefore false;

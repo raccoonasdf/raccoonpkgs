@@ -2,7 +2,7 @@
   description = "raccoon's radicool flakey nix stuff";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.05";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
 
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
@@ -18,7 +18,7 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-21.11";
+      url = "github:nix-community/home-manager/release-22.11";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -147,34 +147,35 @@
         mkHomeConfiguration = { username, file }:
           let node = getNode file.host;
           in home-manager.lib.homeManagerConfiguration {
-            inherit (node) stateVersion system;
-            inherit username;
-
-            homeDirectory = "/home/${username}";
+            pkgs = nixpkgs.legacyPackages.${node.system};
 
             extraSpecialArgs = _specialArgs.${node.system};
 
-            extraModules = [
+            modules = [
               (./home + "/${username}/modules")
               (./home + "/${username}/profiles")
               file.path
+              {
+                home = {
+                  inherit (node) stateVersion;
+                  inherit username;
+                  homeDirectory = "/home/${username}";
+                };
+                nixpkgs = {
+                  config = { inherit (host) allowUnfree; };
+
+                  overlays = [
+                    nur.overlay
+                    agenix.overlays.default
+                    self.overlays.default
+                    (final: prev: {
+                      inherit (unstable) # ...
+                      ;
+                    })
+                  ];
+                };
+              }
             ];
-
-            configuration = {
-              nixpkgs = {
-                config = { inherit (host) allowUnfree; };
-
-                overlays = [
-                  nur.overlay
-                  agenix.overlays.default
-                  self.overlays.default
-                  (final: prev: {
-                    inherit (unstable) # ...
-                    ;
-                  })
-                ];
-              };
-            };
           };
 
         mkHomeConfigurationPair = hostFile@{ username, file }:
