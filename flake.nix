@@ -2,13 +2,11 @@
   description = "raccoon's radicool flakey nix stuff";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-22.11";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-23.05";
 
     unstable.url = "github:nixos/nixpkgs/nixos-unstable";
 
     nur.url = "github:nix-community/NUR";
-
-    utils.url = "github:gytis-ivaskevicius/flake-utils-plus";
 
     deploy-rs.url = "github:serokell/deploy-rs";
 
@@ -18,12 +16,12 @@
     };
 
     home-manager = {
-      url = "github:nix-community/home-manager/release-22.11";
+      url = "github:nix-community/home-manager/release-23.05";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, unstable, nur, utils, deploy-rs, agenix
+  outputs = inputs@{ self, nixpkgs, unstable, nur, deploy-rs, agenix
     , home-manager }:
     with nixpkgs.lib;
     let
@@ -52,7 +50,12 @@
       in mapAttrs (_: v: nodesConfig.default // v) nodesConfig;
 
       getNode = name: nodes.${name} or nodes.default;
-    in utils.lib.mkFlake {
+    in {
+
+      ############################
+      # Exports for External Use #
+      ############################
+
       lib = raccoonlib;
 
       overlays.default = (import ./pkgs) self.lib;
@@ -70,39 +73,10 @@
       # NixOS Configuration #
       #######################
 
-      inherit self inputs;
-
-      channels = {
-        nixpkgs = {
-          input = nixpkgs;
-          overlaysBuilder = channels:
-            [
-              (final: prev: {
-                inherit (channels.unstable) # ...
-                ;
-              })
-            ];
-        };
-
-        unstable.input = unstable;
-      };
-
-      channelsConfig.allowUnfree = true;
-
-      sharedOverlays = [
-        nur.overlay
-        agenix.overlays.default
-        self.overlays.default
-        (final: prev: {
-          home-manager =
-            prev.callPackage "${home-manager}/home-manager" { path = "./."; };
-        }) # is this the right way to do this?
-      ];
-
-      hosts = let
+      nixosConfigurations = let
         mkHost = file:
           let node = getNode file.host;
-          in rec {
+          in nixpkgs.lib.nixosSystem (rec {
             inherit (node) system;
 
             modules = [
@@ -114,12 +88,14 @@
               {
                 system.stateVersion = node.stateVersion;
 
-                nix.generateRegistryFromInputs = true;
+                nix.registry = mapAttrs
+                  (name: v: { flake = v; })
+                  (filterAttrs (name: v: v ? outputs) inputs);
               }
             ];
 
             specialArgs = _specialArgs.${system};
-          };
+          });
 
         mkHostPair = file: nameValuePair file.host (mkHost file);
       in listToAttrs (map mkHostPair (hostFilesIn ./nixos/profiles));

@@ -16,7 +16,6 @@
     initrd.availableKernelModules = [ "virtio_pci" "ahci" "sd_mod" ];
     loader.grub = {
       enable = true;
-      version = 2;
       device = "nodev";
       copyKernels = true;
       fsIdentifier = "label";
