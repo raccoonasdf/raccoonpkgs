@@ -48,11 +48,7 @@
             (attrNames (builtins.readDir path));
         in map mkHostFile hostFileNames;
 
-      nodes = let
-        nodesConfig = (import ./nodes.nix) {
-          lib = nixpkgs.lib;
-          inherit raccoonlib;
-        };
+      nodes = let nodesConfig = import ./nodes.nix;
       in mapAttrs (_: v: nodesConfig.default // v) nodesConfig;
 
       getNode = name: nodes.${name} or nodes.default;

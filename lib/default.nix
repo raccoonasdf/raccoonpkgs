@@ -11,6 +11,6 @@ let
       system = callLibs ./system.nix;
       maintainers = import ./maintainer-list.nix;
 
-      inherit (self.system) systems defaultSystem forAllSystems;
+      inherit (self.system) systems forAllSystems;
     });
 in raccoonlib
