@@ -1,6 +1,16 @@
 { config, ... }:
 let c = import ./config.nix;
 in {
+  services.postgresql = {
+    enable = true;
+    ensureUsers = [{ name = "phpfpm"; }];
+  };
+
+  raccoon.postgresql-activation.ensureDatabasesWith = {
+    "socksposts" = ''
+      OWNER = "phpfpm"'';
+  };
+
   services.nginx = {
     enable = true;
     enableReload = true;
