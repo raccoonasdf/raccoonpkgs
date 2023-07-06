@@ -3,10 +3,7 @@ let config = import ./config.nix;
 in {
   services.postgresql = {
     enable = true;
-    ensureUsers = [{
-      name = "matrix-synapse";
-      ensurePermissions = { "DATABASE \"matrix-synapse\"" = "ALL PRIVILEGES"; };
-    }];
+    ensureUsers = [{ name = "matrix-synapse"; }];
   };
 
   raccoon.postgresql-activation.ensureDatabasesWith = {
