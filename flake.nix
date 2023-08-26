@@ -87,10 +87,14 @@
               file.path
               {
                 system.stateVersion = node.stateVersion;
+                networking.hostName = file.host;
 
-                nix.registry = mapAttrs
-                  (name: v: { flake = v; })
-                  (filterAttrs (name: v: v ? outputs) inputs);
+                nix = {
+                  registry = mapAttrs
+                    (name: v: { flake = v; })
+                    (filterAttrs (name: v: v ? outputs) inputs);
+                  settings.experimental-features = [ "nix-command" "flakes" "repl-flake" ];
+                };
               }
             ];
 
