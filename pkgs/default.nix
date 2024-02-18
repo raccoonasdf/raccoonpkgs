@@ -14,13 +14,16 @@ raccoonlib: final: prev: {
     grafx2 = callPackage ./grafx2 { };
 
     jame = callPackage ./jame { };
-    vscode-extensions =
-      prev.recurseIntoAttrs (callPackage ./vscode-extensions { });
+
+    raccoon-install-tools = callPackage ./raccoon-install-tools { };
     racmenu = callPackage ./racmenu { };
     racscrot = callPackage ./racscrot { };
 
     scala-music = callPackage ./scala-music { };
 
-    raccoon-install-tools = callPackage ./raccoon-install-tools { };
+    dokuwiki-plugins =
+      prev.recurseIntoAttrs (callPackage ./dokuwiki-plugins { });
+    vscode-extensions =
+      prev.recurseIntoAttrs (callPackage ./vscode-extensions { });
   };
 }
