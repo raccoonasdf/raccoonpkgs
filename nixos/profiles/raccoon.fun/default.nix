@@ -1,5 +1,5 @@
 {pkgs, ...}: {
-  imports = [ ./web.nix ./matrix.nix ./thelounge.nix ];
+  imports = [ ./web.nix ./matrix.nix ./irc.nix ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
 
