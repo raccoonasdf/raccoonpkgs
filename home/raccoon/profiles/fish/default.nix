@@ -22,7 +22,8 @@
       "bat" = "bat -p";
       "cat" = "bat -pp";
       "mv" = "mv -i";
-      "tree" = "exa -T";
+      "ls" = "eza";
+      "tree" = "eza -T";
     };
 
     interactiveShellInit = ''

@@ -1,4 +1,4 @@
-{
+{pkgs, ...}: {
   imports = [ ./web.nix ./matrix.nix ./thelounge.nix ];
 
   networking.firewall.allowedTCPPorts = [ 80 443 ];
@@ -7,4 +7,6 @@
     acceptTerms = true;
     defaults.email = "raccoon@raccoon.fun";
   };
+
+  services.postgresql.package = pkgs.postgresql_16;
 }
