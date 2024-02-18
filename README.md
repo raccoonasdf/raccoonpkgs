@@ -11,7 +11,6 @@ i might've used or been inspired by bits from these places:
 
 and i am or will be making use of these projects:
 
-- [gytis-ivaskevicius/flake-utils-plus](https://github.com/gytis-ivaskevicius/flake-utils-plus)
 - [nix-community/home-manager](https://github.com/nix-community/home-manager)
 - [nix-community/NUR](https://github.com/nix-community/NUR)
 - [ryantm/agenix](https://github.com/ryantm/agenix)
